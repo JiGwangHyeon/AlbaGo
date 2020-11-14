@@ -12,7 +12,7 @@
 		<property name="driverClassName"
 			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl"
-			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl" />
+			value="jdbc:log4jdbc:oracle:thin:@175.205.193.91:15211:orcl" />
 		<property name="username" value="crudsquad" />
 		<property name="password" value="1234" />
 
