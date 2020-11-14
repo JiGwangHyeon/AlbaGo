@@ -67,4 +67,11 @@ NoticeController
     /notice/getList/{c_code}
     - c_code 입력
     - c_code에 해당하는 공지사항 제목들 json으로 출력
-    - 반환형 List<NoticeVO
+    - 반환형 List<NoticeVO>
+    
+CompanyController
+  회사명 불러오기
+    /company/getName/{c_code}
+    - c_code 입력
+    - 회사 명 출력
+    - 반환형 String
