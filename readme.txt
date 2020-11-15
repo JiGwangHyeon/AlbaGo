@@ -83,8 +83,15 @@ CompanyController
     - 반환형 String
 
 ScheduleController
-  오늘의 일정 불러오기
+  오늘의 일정 불러오기(직원용)
   /schedule/todays/{c_code}/{u_id}
   - c_code, u_id 입력
   - 오늘의 일정만 담긴 ScheduleVO 출력
   - 반환형 ScheduleVO
+  
+  주별 일정 불러오기(직원용)
+  /schedule/week/{c_code}/{u_id}/{week}
+  - 회사코드, 사용자 아이디, 주 입력
+  - 주: 0 - 이번주, 음수 - 과거, 양수 - 미래
+  - 해당 주의 스케줄 List<ScheduleVO> 로 출력
+  - 반환형 List<ScheduleVO>
