@@ -13,4 +13,8 @@ public interface ScheduleMapper {
 	public int leave(int s_code);
 
 	public List<ScheduleVO> getWeekScheduleForE(ScheduleVO schedule);
+
+	public List<ScheduleVO> getMonthScheduleForE(ScheduleVO schedule);
+
+	public int insertOnce(ScheduleVO schedule);
 }

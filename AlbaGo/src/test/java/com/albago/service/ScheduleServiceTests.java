@@ -1,6 +1,5 @@
 package com.albago.service;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,10 +36,50 @@ public class ScheduleServiceTests {
 		log.info("schedule_arrive: " + service.arrive(5));
 	}
 
-	@Test
+//	@Test
 	public void testLeave() {
 		log.info("testLeave............................");
 
 		log.info("schedule_leave: " + service.leave(5));
+	}
+
+//	@Test
+	public void testGetWeekScheduleForE() {
+		log.info("testGetWeekScheduleForE........................");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setWeek(0);
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+
+		log.info("schedule_getWeekScheduleForE: " + service.getWeekScheduleForE(schedule));
+	}
+
+//	@Test
+	public void testGetMonthScheduleForE() {
+		log.info("testGetMonthScheduleForE");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setYear("2020");
+		schedule.setMonth("11");
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+
+		log.info("schedule_getMonthScheduleForE: " + service.getMonthScheduleForE(schedule));
+
+	}
+
+//	@Test
+	public void testInsertOnce() {
+		log.info("testInsertOnce.....................");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+		schedule.setS_start("2020-11-15");
+		schedule.setS_end("2020-11-15");
+
+		log.info("schedule_getMonthScheduleForE: " + service.insertOnce(schedule));
+
 	}
 }

@@ -42,4 +42,43 @@ public class ScheduleMapperTests {
 
 		log.info("Schedule_leave: " + mapper.leave(1));
 	}
+
+//	@Test
+	public void testGetWeekScheduleForE() {
+		log.info("testGetWeekScheduleForE........................");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setWeek(0);
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+
+		log.info("schedule_getWeekScheduleForE: " + mapper.getWeekScheduleForE(schedule));
+	}
+
+//	@Test
+	public void testGetMonthScheduleForE() {
+		log.info("testGetMonthScheduleForE");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setYear("2020");
+		schedule.setMonth("12");
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+
+		log.info("schedule_getMonthScheduleForE: " + mapper.getMonthScheduleForE(schedule));
+
+	}
+
+//	@Test
+	public void testInsertOnce() {
+		log.info("testInsertOnce.....................");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+		schedule.setS_start("2020-11-15");
+		schedule.setS_end("2020-11-15");
+
+		log.info("schedule_insertOnce: " + mapper.insertOnce(schedule));
+	}
 }
