@@ -118,6 +118,17 @@ public class UserInfoController {
 		return userInfoService.get(u_id); // json 데이터 출력
 	}
 
+	// 회원 이름 가져오기
+	@GetMapping(value = "/get/name/{u_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public String getName(@PathVariable("u_id") String u_id) {
+		log.info("getName 호출.......................");
+
+		String st = userInfoService.get(u_id).getU_name();
+		log.info(st);
+
+		return st; // String 데이터 출력
+	}
+
 	// 로그인
 	@GetMapping(value = "/login/{u_id}/{u_pw}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public int login(@PathVariable("u_id") String u_id, @PathVariable("u_pw") String u_pw) {

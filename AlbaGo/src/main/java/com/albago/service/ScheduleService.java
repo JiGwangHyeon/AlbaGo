@@ -1,8 +1,8 @@
-package com.albago.mapper;
+package com.albago.service;
 
 import com.albago.domain.ScheduleVO;
 
-public interface ScheduleMapper {
+public interface ScheduleService {
 
 	public ScheduleVO getTodaysSchedule(ScheduleVO schedule);
 }

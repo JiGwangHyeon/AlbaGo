@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.CompanyMapper">
 
-	<select id="getCompanyName">
-		select 
+	<select id="getCompanyName" resultType="String">
+		select c_name from company where c_code=#{c_code}
 	</select>
 
 	<insert id="insertUser">
