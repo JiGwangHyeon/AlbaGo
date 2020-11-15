@@ -16,10 +16,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private ScheduleMapper mapper;
 
 	@Override
-	public ScheduleVO getTodaysSchedule(ScheduleVO schedule) {
+	public ScheduleVO getTodaysScheduleForE(ScheduleVO schedule) {
 		log.info("getTodaysSchedule................");
 
-		return mapper.getTodaysSchedule(schedule);
+		return mapper.getTodaysScheduleForE(schedule);
+	}
+
+	@Override
+	public int arrive(int s_code) {
+		log.info("arrive................");
+
+		return mapper.arrive(s_code);
+	}
+
+	@Override
+	public int leave(int s_code) {
+		log.info("leave................");
+
+		return mapper.leave(s_code);
 	}
 
 }

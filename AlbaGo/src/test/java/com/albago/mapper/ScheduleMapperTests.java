@@ -1,6 +1,5 @@
 package com.albago.mapper;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,7 +18,7 @@ public class ScheduleMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private ScheduleMapper mapper;
 
-	@Test
+//	@Test
 	public void testGetTodaysSchedule() {
 		log.info("testGetTodaysSchedule..............");
 
@@ -27,6 +26,20 @@ public class ScheduleMapperTests {
 		schedule.setU_id("gkdud0941");
 		schedule.setC_code(1234123521);
 
-		log.info("ScheduleVO: " + mapper.getTodaysSchedule(schedule));
+		log.info("ScheduleVO: " + mapper.getTodaysScheduleForE(schedule));
+	}
+
+//	@Test
+	public void testArrive() {
+		log.info("testArrive..................");
+
+		log.info("Schedule_arrive: " + mapper.arrive(1));
+	}
+
+//	@Test
+	public void testLeave() {
+		log.info("testLeave.................");
+
+		log.info("Schedule_leave: " + mapper.leave(1));
 	}
 }

@@ -19,7 +19,7 @@ public class ScheduleServiceTests {
 	@Setter(onMethod_ = @Autowired)
 	private ScheduleService service;
 
-	@Test
+//	@Test
 	public void testGetTodaysSchedule() {
 		log.info("testGetTodaysSchedule................");
 
@@ -27,6 +27,20 @@ public class ScheduleServiceTests {
 		schedule.setU_id("gkdud0941");
 		schedule.setC_code(1234123521);
 
-		log.info("ScheduleVO: " + service.getTodaysSchedule(schedule));
+		log.info("ScheduleVO: " + service.getTodaysScheduleForE(schedule));
+	}
+
+//	@Test
+	public void testArrive() {
+		log.info("testArrive............................");
+
+		log.info("schedule_arrive: " + service.arrive(5));
+	}
+
+	@Test
+	public void testLeave() {
+		log.info("testLeave............................");
+
+		log.info("schedule_leave: " + service.leave(5));
 	}
 }

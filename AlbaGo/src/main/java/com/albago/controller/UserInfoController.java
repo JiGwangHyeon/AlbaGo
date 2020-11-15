@@ -31,7 +31,7 @@ public class UserInfoController {
 	private EmailService emailService;
 
 	// 아이디 중복 체크
-	@GetMapping(value = "/idCheck/{u_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/idCheck/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int idCheck(@PathVariable("u_id") String u_id) {
 		log.info("idCheck 호출.........................");
 
@@ -40,7 +40,7 @@ public class UserInfoController {
 
 	// 회원가입
 	@GetMapping(value = "/insert/{u_id}/{u_pw}/{u_name}/{u_email:.+}/{u_birth:.+}/{u_gender}/{u_addr}/{u_phone:.+}/{u_position}", produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int register(@PathVariable("u_id") String u_id, @PathVariable("u_pw") String u_pw,
 			@PathVariable("u_name") String u_name, @PathVariable("u_email") String u_email,
 			@PathVariable("u_birth") String u_birth, @PathVariable("u_gender") int u_gender,
@@ -68,7 +68,7 @@ public class UserInfoController {
 	}
 
 	// 회원가입 시 이메일 인증, URI의 끝에 이메일이 오는 경우 '.com'등으로 인해 확장자로 인식함. 슬래시로 닫아줘야함
-	@GetMapping(value = "/emailAuth/forRegister/{u_email}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/emailAuth/forRegister/{u_email}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int sendEmailAuthForRegister(@PathVariable("u_email") String u_email) {
 
 		log.info("sendEmailAuthForRegister 호출");
@@ -96,7 +96,7 @@ public class UserInfoController {
 	}
 
 	// 이메일 인증번호 확인
-	@GetMapping(value = "/emailAuth/match/{u_email}/{a_code}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/emailAuth/match/{u_email}/{a_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int matchEmailAuth(@PathVariable("u_email") String u_email, @PathVariable("a_code") String a_code) {
 
 		log.info("matchEmailAuth");
@@ -111,7 +111,7 @@ public class UserInfoController {
 	}
 
 	// 회원 정보 가져오기
-	@GetMapping(value = "/get/{u_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/get/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public UserInfoVO get(@PathVariable("u_id") String u_id) {
 		log.info("get 호출.......................");
 
@@ -119,7 +119,7 @@ public class UserInfoController {
 	}
 
 	// 회원 이름 가져오기
-	@GetMapping(value = "/get/name/{u_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/get/name/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public String getName(@PathVariable("u_id") String u_id) {
 		log.info("getName 호출.......................");
 
@@ -130,7 +130,7 @@ public class UserInfoController {
 	}
 
 	// 로그인
-	@GetMapping(value = "/login/{u_id}/{u_pw}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/login/{u_id}/{u_pw}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int login(@PathVariable("u_id") String u_id, @PathVariable("u_pw") String u_pw) {
 		log.info("login 호출......................");
 
@@ -144,7 +144,7 @@ public class UserInfoController {
 	}
 
 	// 아이디 찾기, URI의 끝에 이메일이 오는 경우 '.com'등으로 인해 확장자로 인식함. 슬래시로 닫아줘야함
-	@GetMapping(value = "/find/id/{u_name}/{u_email:.+}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/id/{u_name}/{u_email:.+}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int beforeFindId(@PathVariable("u_name") String u_name, @PathVariable("u_email") String u_email) {
 		log.info("findId 호출............" + u_name + " " + u_email);
 
@@ -175,7 +175,7 @@ public class UserInfoController {
 	}
 
 	// 비밀번호 재설정 전 정보 인증, URI의 끝에 이메일이 오는 경우 '.com'등으로 인해 확장자로 인식함. 슬래시로 닫아줘야함
-	@GetMapping(value = "/find/pw/{u_name}/{u_id}/{u_email:.+}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/pw/{u_name}/{u_id}/{u_email:.+}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int beforeFindPw(@PathVariable("u_name") String u_name, @PathVariable("u_id") String u_id,
 			@PathVariable("u_email") String u_email) {
 		log.info("findPw 호출........................" + u_name + " " + u_id + " " + u_email);
@@ -214,7 +214,7 @@ public class UserInfoController {
 	}
 
 	// 비밀번호 재설정
-	@GetMapping(value = "/reset/pw/{u_id}/{u_pw}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/reset/pw/{u_id}/{u_pw}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int resetPw(@PathVariable("u_id") String u_id, @PathVariable("u_pw") String u_pw) {
 		log.info("resetPw 호출 ..............................");
 
@@ -227,7 +227,7 @@ public class UserInfoController {
 	}
 
 	// 계정 삭제
-	@GetMapping(value = "/delete/{u_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/delete/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int deleteUser(@PathVariable("u_id") String u_id) {
 		log.info("deleteUser 호출.....................");
 
