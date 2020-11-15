@@ -61,10 +61,30 @@ userInfoController
     - 아이디 입력
     - db에 delete 된 개수 출력
     - 반환형 int / 1이면 정상
+    
+  회원 이름 가져오기
+    /userInfo/get/name/{u_id}
+    - 아이디 입력
+    - 회원 이름 출력
+    - 반환형 String
 
 NoticeController
   제목 리스트 불러오기
     /notice/getList/{c_code}
     - c_code 입력
     - c_code에 해당하는 공지사항 제목들 json으로 출력
-    - 반환형 List<NoticeVO
+    - 반환형 List<NoticeVO>
+    
+CompanyController
+  회사명 불러오기
+    /company/getName/{c_code}
+    - c_code 입력
+    - 회사 명 출력
+    - 반환형 String
+
+ScheduleController
+  오늘의 일정 불러오기
+  /schedule/todays/{c_code}/{u_id}
+  - c_code, u_id 입력
+  - 오늘의 일정만 담긴 ScheduleVO 출력
+  - 반환형 ScheduleVO
