@@ -2,6 +2,7 @@ package com.albago.service;
 
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.albago.domain.ScheduleVO;
@@ -53,10 +54,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public int insertOnce(ScheduleVO schedule) {
+	public int insertSchedule(ScheduleVO schedule) {
 		log.info("insertOnce.........................");
 
-		return mapper.insertOnce(schedule);
+		return mapper.insertSchedule(schedule);
+	}
+
+	@Scheduled(cron = "0/3 * * * * *")
+	public void testtask() {
+		log.info("test");
 	}
 
 }

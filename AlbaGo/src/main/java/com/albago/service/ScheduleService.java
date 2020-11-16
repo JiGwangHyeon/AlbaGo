@@ -16,5 +16,5 @@ public interface ScheduleService {
 
 	public List<ScheduleVO> getMonthScheduleForE(ScheduleVO schedule);
 
-	public int insertOnce(ScheduleVO schedule);
+	public int insertSchedule(ScheduleVO schedule);
 }

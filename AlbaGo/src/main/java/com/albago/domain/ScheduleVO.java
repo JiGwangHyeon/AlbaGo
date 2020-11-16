@@ -11,7 +11,4 @@ public class ScheduleVO {
 	private String s_end;
 	private String s_arrive;
 	private String s_leave;
-	private String year;
-	private String month;
-	private int week;
 }

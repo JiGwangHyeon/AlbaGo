@@ -21,37 +21,23 @@
 
 	<select id="getWeekScheduleForE"
 		resultType="com.albago.domain.ScheduleVO">
-	
-	<![CDATA[
-		select * from schedule where
-		s_start>=
+		<![CDATA[
+			select * from schedule where s_start >= to_date(#{s_start}, 'YYYYMMDD') and s_start < to_date(#{s_start},'YYYYMMDD')+7 and c_code=#{c_code} and u_id=#{u_id}
 		]]>
-		<include refid="mondayDate"></include>
-		+#{week}*7
-		and
-	<![CDATA[
-		s_start < 
-		]]>
-		<include refid="mondayDate"></include>
-		+#{week}*7 +7
-		and c_code=#{c_code} and u_id=#{u_id}
-
 	</select>
-
-	<sql id="mondayDate">
-		(trunc(sysdate)-mod(to_number(to_char(sysdate, 'd'))+5,7))
-	</sql>
 
 	<select id="getMonthScheduleForE"
 		resultType="com.albago.domain.ScheduleVO">
-		select * from schedule where to_char(s_start,'YYYY') =
-		#{year} and to_char(s_start,'MM')=#{month} and c_code=#{c_code} and
+		select * from schedule where to_char(s_start,'YYYYMM') = #{s_start} and c_code=#{c_code} and
 		u_id=#{u_id}
 	</select>
 
-	<insert id="insertOnce">
-		insert into schedule (s_code, c_code, u_id, s_start, s_end) values
-		(seq_s_code.nextval, #{c_code}, #{u_id}, #{s_start}, #{s_end})
+	<insert id="insertSchedule">
+		insert into schedule (s_code, c_code, u_id, s_start,
+		s_end) values
+		(seq_s_code.nextval, #{c_code}, #{u_id},
+		to_date(#{s_start},'YYYYMMDDHH24MI'),
+		to_date(#{s_end},'YYYYMMDDHH24MI'))
 	</insert>
 
 

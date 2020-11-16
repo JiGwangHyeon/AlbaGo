@@ -1,5 +1,6 @@
 package com.albago.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -60,7 +61,16 @@ public class ScheduleController {
 		ScheduleVO schedule = new ScheduleVO();
 		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
-		schedule.setWeek(week);
+
+		Calendar s_start = Calendar.getInstance();
+		if (s_start.get(Calendar.DAY_OF_WEEK) == 1) {
+			s_start.add(Calendar.DATE, -6 + week * 7);
+		} else {
+			s_start.add(Calendar.DATE, -s_start.get(Calendar.DAY_OF_WEEK) + 2 + week * 7);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		schedule.setS_start(sdf.format(s_start.getTime()));
 
 		return scheduleService.getWeekScheduleForE(schedule);
 	}
@@ -68,15 +78,19 @@ public class ScheduleController {
 	// 월별 일정 불러오기
 	@GetMapping(value = "/month/{c_code}/{u_id}/{year}/{month}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public List<ScheduleVO> getMonthScheduleForE(@PathVariable("c_code") int c_code, @PathVariable("u_id") String u_id,
-			@PathVariable("year") String year, @PathVariable("month") String month) {
+			@PathVariable("year") int year, @PathVariable("month") int month) {
 		log.info("getMonthScheduleForE 호출............");
 
 		ScheduleVO schedule = new ScheduleVO();
 		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
-		schedule.setYear(year);
-		schedule.setMonth(month);
 
+		Calendar s_start = Calendar.getInstance();
+		s_start.set(Calendar.YEAR, year);
+		s_start.set(Calendar.MONTH, month - 1);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+		schedule.setS_start(sdf.format(s_start.getTime()));
 		return scheduleService.getMonthScheduleForE(schedule);
 	}
 
@@ -92,26 +106,50 @@ public class ScheduleController {
 		ScheduleVO schedule = new ScheduleVO();
 		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
-		Calendar start_date;
-		Calendar end_date;
-		start_date.getInstance();
-		start_date.set(year, month, date, start_hour, start_minute, 0);
-
-		end_date.getInstance();
-		end_date.set(year, month, date, end_hour, end_minute, 0);
+		Calendar start_date = Calendar.getInstance();
+		Calendar end_date = Calendar.getInstance();
+		start_date.set(year, month - 1, date, start_hour, start_minute, 0);
+		end_date.set(year, month - 1, date, end_hour, end_minute, 0);
 
 		if (start_date.after(end_date)) {
-
+			end_date.add(Calendar.DATE, 1);
 		}
 
-		String start_df = "d";
-		int start_time = start_hour * 24 + start_minute;
-		int end_time = end_hour * 24 + end_minute;
-		if (start_time > end_time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+		log.info(sdf.format(start_date.getTime()));
+		log.info(sdf.format(end_date.getTime()));
+		schedule.setS_start(sdf.format(start_date.getTime()));
+		schedule.setS_end(sdf.format(end_date.getTime()));
 
+		return scheduleService.insertSchedule(schedule);
+	}
+
+	// 일정 매 주 반복 추가
+	@GetMapping(value = "/add/repeat/{c_code}/{u_id}/{repeat}/{start_hour}/{start_minute}/{end_hour}/{end_minute}", produces = {
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public int insertWeeklyRepeat(@PathVariable("c_code") int c_code, @PathVariable("u_id") String u_id,
+			@PathVariable("repeat") String repeat, @PathVariable("start_hour") int start_hour,
+			@PathVariable("start_minute") int start_minute, @PathVariable("end_hour") int end_hour,
+			@PathVariable("end_minute") int end_minute) {
+		log.info("insertWeeklyRepeat 호출............");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setC_code(c_code);
+		schedule.setU_id(u_id);
+		Calendar start_date = Calendar.getInstance();
+		Calendar end_date = Calendar.getInstance();
+
+		if (start_date.after(end_date)) {
+			end_date.add(Calendar.DATE, 1);
 		}
 
-		return scheduleService.insertOnce(schedule);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+		log.info(sdf.format(start_date.getTime()));
+		log.info(sdf.format(end_date.getTime()));
+		schedule.setS_start(sdf.format(start_date.getTime()));
+		schedule.setS_end(sdf.format(end_date.getTime()));
+
+		return scheduleService.insertSchedule(schedule);
 	}
 
 }
