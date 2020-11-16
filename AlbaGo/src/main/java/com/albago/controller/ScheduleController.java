@@ -1,5 +1,6 @@
 package com.albago.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
+import com.albago.service.ScheduleRepeatService;
 import com.albago.service.ScheduleService;
+import com.albago.util.RepeatSchedule;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -23,6 +27,7 @@ import lombok.extern.log4j.Log4j;
 public class ScheduleController {
 
 	private ScheduleService scheduleService;
+	private ScheduleRepeatService scheduleRepeatService;
 
 	// 해당 직원의 오늘의 근무 일정 조회
 	@GetMapping(value = "/todays/{c_code}/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
@@ -95,61 +100,45 @@ public class ScheduleController {
 	}
 
 	// 일정 한개만 추가
-	@GetMapping(value = "/add/{c_code}/{u_id}/{year}/{month}/{date}/{start_hour}/{start_minute}/{end_hour}/{end_minute}", produces = {
+	@GetMapping(value = "/add/{c_code}/{u_id}/{s_start:.+}/{s_end:.+}", produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int insertOnce(@PathVariable("c_code") int c_code, @PathVariable("u_id") String u_id,
-			@PathVariable("year") int year, @PathVariable("month") int month, @PathVariable("date") int date,
-			@PathVariable("start_hour") int start_hour, @PathVariable("start_minute") int start_minute,
-			@PathVariable("end_hour") int end_hour, @PathVariable("end_minute") int end_minute) {
+			@PathVariable("s_start") String s_start, @PathVariable("s_end") String s_end) {
 		log.info("insertOnce 호출............");
 
 		ScheduleVO schedule = new ScheduleVO();
 		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
-		Calendar start_date = Calendar.getInstance();
-		Calendar end_date = Calendar.getInstance();
-		start_date.set(year, month - 1, date, start_hour, start_minute, 0);
-		end_date.set(year, month - 1, date, end_hour, end_minute, 0);
-
-		if (start_date.after(end_date)) {
-			end_date.add(Calendar.DATE, 1);
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-		log.info(sdf.format(start_date.getTime()));
-		log.info(sdf.format(end_date.getTime()));
-		schedule.setS_start(sdf.format(start_date.getTime()));
-		schedule.setS_end(sdf.format(end_date.getTime()));
+		schedule.setS_start(s_start);
+		schedule.setS_end(s_end);
 
 		return scheduleService.insertSchedule(schedule);
 	}
 
 	// 일정 매 주 반복 추가
-	@GetMapping(value = "/add/repeat/{c_code}/{u_id}/{repeat}/{start_hour}/{start_minute}/{end_hour}/{end_minute}", produces = {
+	@GetMapping(value = "/add/repeat/{c_code}/{u_id}/{repeat}/{start}/{end}", produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public int insertWeeklyRepeat(@PathVariable("c_code") int c_code, @PathVariable("u_id") String u_id,
-			@PathVariable("repeat") String repeat, @PathVariable("start_hour") int start_hour,
-			@PathVariable("start_minute") int start_minute, @PathVariable("end_hour") int end_hour,
-			@PathVariable("end_minute") int end_minute) {
+			@PathVariable("repeat") String repeat, @PathVariable("start") String start, @PathVariable("end") String end)
+			throws ParseException {
 		log.info("insertWeeklyRepeat 호출............");
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setC_code(c_code);
-		schedule.setU_id(u_id);
-		Calendar start_date = Calendar.getInstance();
-		Calendar end_date = Calendar.getInstance();
+		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
 
-		if (start_date.after(end_date)) {
-			end_date.add(Calendar.DATE, 1);
+		scheduleRepeat.setC_code(c_code);
+		scheduleRepeat.setU_id(u_id);
+		scheduleRepeat.setSr_start(start);
+		scheduleRepeat.setSr_end(end);
+		scheduleRepeat.setSr_repeat(repeat);
+
+		int result = scheduleRepeatService.insertRepeat(scheduleRepeat);
+
+		if (result == 1) {
+			RepeatSchedule rs = new RepeatSchedule();
+			rs.whenInsert(scheduleRepeat, scheduleService);
 		}
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-		log.info(sdf.format(start_date.getTime()));
-		log.info(sdf.format(end_date.getTime()));
-		schedule.setS_start(sdf.format(start_date.getTime()));
-		schedule.setS_end(sdf.format(end_date.getTime()));
-
-		return scheduleService.insertSchedule(schedule);
+		return result;
 	}
 
 }

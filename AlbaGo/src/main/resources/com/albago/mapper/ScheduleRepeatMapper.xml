@@ -3,7 +3,7 @@
 <mapper namespace="com.albago.mapper.ScheduleRepeatMapper">
 
 	<insert id="insertRepeat">
-		insert into schedule_repeat values (seq_sr_code.nextval, #{c_code}, #{u_id}, #{sr_start}, #{sr_end}, #{sr_repeat})
+		insert into schedule_repeat values (seq_sr_code.nextval, #{c_code}, #{u_id}, to_date(#{sr_start}, 'HH24:MI:SS'), to_date(#{sr_end}, 'HH24:MI:SS'), #{sr_repeat})
 	</insert>
 
 

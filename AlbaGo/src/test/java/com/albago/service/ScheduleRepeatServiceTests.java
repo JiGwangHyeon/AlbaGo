@@ -1,4 +1,4 @@
-package com.albago.mapper;
+package com.albago.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,10 +14,10 @@ import lombok.extern.log4j.Log4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
-public class ScheduleRepeatMapperTests {
+public class ScheduleRepeatServiceTests {
 
 	@Setter(onMethod_ = @Autowired)
-	private ScheduleRepeatMapper mapper;
+	private ScheduleRepeatService service;
 
 	@Test
 	public void testInsert() {
@@ -31,6 +31,6 @@ public class ScheduleRepeatMapperTests {
 		scheduleRepeat.setSr_end("18:00");
 		scheduleRepeat.setSr_repeat("034");
 
-		log.info("testInsert_result: " + mapper.insertRepeat(scheduleRepeat));
+		log.info("testInsert_result: " + service.insertRepeat(scheduleRepeat));
 	}
 }

@@ -43,5 +43,9 @@
 		<filter-name>encoding</filter-name>
 		<servlet-name>appServlet</servlet-name>
 	</filter-mapping>
+	
+	<session-config>
+		<session-timeout>2880</session-timeout>
+	</session-config>
 
 </web-app>
