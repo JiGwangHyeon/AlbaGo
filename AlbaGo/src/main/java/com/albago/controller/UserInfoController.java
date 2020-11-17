@@ -4,7 +4,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -237,10 +239,16 @@ public class UserInfoController {
 	}
 
 	// 계정 삭제
-	@GetMapping(value = "/delete/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public int deleteUser(@PathVariable("u_id") String u_id) {
+	@GetMapping(value = "/delete", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> deleteUser(HttpServletRequest request) {
 		log.info("deleteUser 호출.....................");
 
-		return userInfoService.deleteUser(u_id); // 계정 삭제 결과 반환, 1이면 정상
+		HttpSession session = request.getSession();
+		String u_id = (String) session.getAttribute("u_id");
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		return new ResponseEntity<>(userInfoService.deleteUser(u_id), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
 	}
 }

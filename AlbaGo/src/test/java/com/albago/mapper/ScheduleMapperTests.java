@@ -83,7 +83,7 @@ public class ScheduleMapperTests {
 		log.info("schedule_getWeekScheduleForE: " + mapper.getWeekScheduleForE(schedule));
 	}
 
-	@Test
+//	@Test
 	public void testGetMonthScheduleForE() {
 		log.info("testGetMonthScheduleForE");
 
@@ -103,15 +103,16 @@ public class ScheduleMapperTests {
 
 	}
 
-//	@Test
+	@Test
 	public void testInsertOnce() {
 		log.info("testInsertOnce.....................");
 
 		ScheduleVO schedule = new ScheduleVO();
 		schedule.setU_id("gkdud0941");
 		schedule.setC_code(1234123521);
-		schedule.setS_start("2020-11-15");
-		schedule.setS_end("2020-11-15");
+		schedule.setS_start("2020-11-15 09:00:00");
+		schedule.setS_end("2020-11-15 18:00:00");
+		schedule.setSr_code(6);
 
 		log.info("schedule_insertOnce: " + mapper.insertSchedule(schedule));
 	}

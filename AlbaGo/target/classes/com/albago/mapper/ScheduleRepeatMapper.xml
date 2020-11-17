@@ -2,9 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.ScheduleRepeatMapper">
 
-	<insert id="insertRepeat">
+	<insert id="insertRepeat" parameterType="com.albago.domain.ScheduleRepeatVO">
+		<selectKey resultType="int" keyProperty="sr_code" order="BEFORE">
+			select seq_sr_code.nextval from dual 
+		</selectKey>
 		insert into schedule_repeat values
-		(seq_sr_code.nextval, #{c_code}, #{u_id}, to_date(#{sr_start},
+		(#{sr_code}, #{c_code}, #{u_id}, to_date(#{sr_start},
 		'HH24:MI:SS'), to_date(#{sr_end}, 'HH24:MI:SS'), #{sr_repeat})
 	</insert>
 

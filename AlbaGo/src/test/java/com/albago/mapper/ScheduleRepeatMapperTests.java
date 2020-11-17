@@ -27,10 +27,11 @@ public class ScheduleRepeatMapperTests {
 
 		scheduleRepeat.setC_code(1234123521);
 		scheduleRepeat.setU_id("gkdud0941");
-		scheduleRepeat.setSr_start("12:00");
-		scheduleRepeat.setSr_end("18:00");
-		scheduleRepeat.setSr_repeat("034");
+		scheduleRepeat.setSr_start("12:00:00");
+		scheduleRepeat.setSr_end("18:00:00");
+		scheduleRepeat.setSr_repeat("0134");
 
 		log.info("testInsert_result: " + mapper.insertRepeat(scheduleRepeat));
+		log.info("sr_code: " + scheduleRepeat.getSr_code());
 	}
 }

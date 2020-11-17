@@ -36,10 +36,18 @@
 
 	<insert id="insertSchedule">
 		insert into schedule (s_code, c_code, u_id, s_start,
-		s_end) values
+		s_end
+		<if test="sr_code != null">
+			, sr_code
+		</if>
+		) values
 		(seq_s_code.nextval, #{c_code}, #{u_id},
 		to_date(#{s_start},'YYYY-MM-DD HH24:MI:SS'),
-		to_date(#{s_end},'YYYY-MM-DD HH24:MI:SS'))
+		to_date(#{s_end},'YYYY-MM-DD HH24:MI:SS')
+		<if test="sr_code != null">
+			, #{sr_code}
+		</if>
+		)
 	</insert>
 
 </mapper>

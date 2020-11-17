@@ -11,4 +11,5 @@ public class ScheduleVO {
 	private String s_end;
 	private String s_arrive;
 	private String s_leave;
+	private int sr_code;
 }

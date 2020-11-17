@@ -31,6 +31,7 @@ public class RepeatSchedule {
 
 	public int whenInsert(ScheduleRepeatVO scheduleRepeat, ScheduleService schedule) throws ParseException {
 
+		int sr_code = scheduleRepeat.getSr_code();
 		int c_code = scheduleRepeat.getC_code();
 		String u_id = scheduleRepeat.getU_id();
 		String sr_start = scheduleRepeat.getSr_start();
@@ -59,6 +60,7 @@ public class RepeatSchedule {
 		ScheduleVO scheduleVo = new ScheduleVO();
 		scheduleVo.setC_code(c_code);
 		scheduleVo.setU_id(u_id);
+		scheduleVo.setSr_code(sr_code);
 
 		int count = 0;
 		for (int i = 0; i < dayArr.length; i++) {
