@@ -103,7 +103,7 @@ public class ScheduleMapperTests {
 
 	}
 
-	@Test
+//	@Test
 	public void testInsertOnce() {
 		log.info("testInsertOnce.....................");
 
@@ -115,5 +115,19 @@ public class ScheduleMapperTests {
 		schedule.setSr_code(6);
 
 		log.info("schedule_insertOnce: " + mapper.insertSchedule(schedule));
+	}
+
+//	@Test
+	public void testGetListTwoDaysAgo() {
+		log.info("getListTwoDayAgoTest...........");
+
+		log.info("getListResult: " + mapper.getListTwoDaysAgo());
+	}
+
+	@Test
+	public void testGetListByCompany() {
+		log.info("getListByCompany..................");
+
+		log.info("getListResult: " + mapper.getListByCompany(1234567890));
 	}
 }

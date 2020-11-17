@@ -8,6 +8,17 @@
 		u_id=#{u_id} and to_char(s_start, 'yyyy-mm-dd')=to_char(sysdate,
 		'yyyy-mm-dd')
 	</select>
+	
+	<select id="getListTwoDaysAgo" resultType="com.albago.domain.ScheduleVO">
+		select * from schedule where to_char(s_start,'YYYYMMDD') = to_char(sysdate-(interval '2' day), 'YYYYMMDD')
+	</select>
+	
+	<insert id="copyListTwoDaysAgo">
+	</insert>
+	
+	<select id="getListByCompany" resultType="com.albago.domain.ScheduleVO">
+		select * from schedule where c_code=#{c_code}
+	</select>
 
 	<update id="arrive">
 		update schedule set s_arrive = sysdate where s_code =

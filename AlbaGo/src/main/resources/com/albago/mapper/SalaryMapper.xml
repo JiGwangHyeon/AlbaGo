@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.albago.mapper.SalaryMapper">
+
+	<insert id="insertSalary">
+		insert into salary values(#{sa_code}, #{c_code},
+		#{u_id}, #{s_code}, #{sa_base}, #{sa_wextra}, #{sa_nextra},
+		#{sa_oextra}, #{sa_hextra})
+	</insert>
+
+</mapper>

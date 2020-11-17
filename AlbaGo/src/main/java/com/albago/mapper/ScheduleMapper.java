@@ -17,4 +17,8 @@ public interface ScheduleMapper {
 	public List<ScheduleVO> getMonthScheduleForE(ScheduleVO schedule);
 
 	public int insertSchedule(ScheduleVO schedule);
+
+	public List<ScheduleVO> getListTwoDaysAgo();
+
+	public List<ScheduleVO> getListByCompany(int c_code);
 }
