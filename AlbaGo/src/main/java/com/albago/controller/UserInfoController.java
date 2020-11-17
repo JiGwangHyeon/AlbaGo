@@ -146,10 +146,11 @@ public class UserInfoController {
 		if (result == 1) {
 			HttpSession session = request.getSession();
 			session.setAttribute("u_id", u_id);
+			log.info(session.getId());
 		}
 
 		return result; // userInfo테이블에서 일치하는 데이터 개수 반환
-						// 1이면 정상
+		// 1이면 정상
 	}
 
 	// 아이디 찾기, URI의 끝에 이메일이 오는 경우 '.com'등으로 인해 확장자로 인식함. 슬래시로 닫아줘야함

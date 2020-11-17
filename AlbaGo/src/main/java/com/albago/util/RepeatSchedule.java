@@ -29,7 +29,7 @@ public class RepeatSchedule {
 
 	}
 
-	public void whenInsert(ScheduleRepeatVO scheduleRepeat, ScheduleService schedule) throws ParseException {
+	public int whenInsert(ScheduleRepeatVO scheduleRepeat, ScheduleService schedule) throws ParseException {
 
 		int c_code = scheduleRepeat.getC_code();
 		String u_id = scheduleRepeat.getU_id();
@@ -60,6 +60,7 @@ public class RepeatSchedule {
 		scheduleVo.setC_code(c_code);
 		scheduleVo.setU_id(u_id);
 
+		int count = 0;
 		for (int i = 0; i < dayArr.length; i++) {
 			Calendar calStart = Calendar.getInstance();
 			Calendar calEnd = Calendar.getInstance();
@@ -72,35 +73,37 @@ public class RepeatSchedule {
 
 			int dayArr_int = Integer.parseInt(dayArr[i]);
 
+			System.out.println("dayArr_int: " + dayArr_int);
+			System.out.println("calStart: " + calStart.getTime());
+			calStart.set(Calendar.DAY_OF_WEEK, dayArr_int);
+//			System.out.println("calStart: " + calStart.getTime());
+			calEnd = (Calendar) calStart.clone();
+			calEnd.add(Calendar.MILLISECOND, interval);
+			System.out.println("calEnd: " + calEnd.getTime());
+
 			if (now.get(Calendar.DAY_OF_WEEK) <= dayArr_int) {
-				System.out.println("dayArr_int: " + dayArr_int);
-				System.out.println("calStart: " + calStart.getTime());
-				calStart.set(Calendar.DAY_OF_WEEK, dayArr_int);
-//				System.out.println("calStart: " + calStart.getTime());
-				calEnd = (Calendar) calStart.clone();
-				calEnd.add(Calendar.MILLISECOND, interval);
-				System.out.println("calEnd: " + calEnd.getTime());
 
 				scheduleVo.setS_start(sdf.format(calStart.getTime()));
 				scheduleVo.setS_end(sdf.format(calEnd.getTime()));
 
-				schedule.insertSchedule(scheduleVo);
-
-				calStart.add(Calendar.DAY_OF_MONTH, 7);
-				calEnd.add(Calendar.DAY_OF_MONTH, 7);
+				count += schedule.insertSchedule(scheduleVo);
 			}
+
+			calStart.add(Calendar.DAY_OF_MONTH, 7);
+			calEnd.add(Calendar.DAY_OF_MONTH, 7);
 			while (end.after(calStart)) {
 				scheduleVo.setS_start(sdf.format(calStart.getTime()));
 				scheduleVo.setS_end(sdf.format(calEnd.getTime()));
 				System.out.println("calStart: " + calStart.getTime());
 				System.out.println("calEnd: " + calEnd.getTime());
 
-				schedule.insertSchedule(scheduleVo);
+				count += schedule.insertSchedule(scheduleVo);
 
 				calStart.add(Calendar.DAY_OF_MONTH, 7);
 				calEnd.add(Calendar.DAY_OF_MONTH, 7);
 			}
 		}
+		return count;
 	}
 
 	public String[] getDayArr(String repeat) {

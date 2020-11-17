@@ -37,14 +37,24 @@ public class ScheduleMapperTests {
 	public void testArrive() {
 		log.info("testArrive..................");
 
-		log.info("Schedule_arrive: " + mapper.arrive(1));
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setC_code(1234123521);
+		schedule.setS_code(1);
+		schedule.setU_id("kwang2951");
+
+		log.info("Schedule_arrive: " + mapper.arrive(schedule));
 	}
 
 //	@Test
 	public void testLeave() {
 		log.info("testLeave.................");
 
-		log.info("Schedule_leave: " + mapper.leave(1));
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setC_code(1234123521);
+		schedule.setS_code(1);
+		schedule.setU_id("kwang2951");
+
+		log.info("Schedule_arrive: " + mapper.leave(schedule));
 	}
 
 //	@Test

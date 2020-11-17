@@ -11,24 +11,26 @@
 
 	<update id="arrive">
 		update schedule set s_arrive = sysdate where s_code =
-		#{s_code}
+		#{s_code} and c_code = #{c_code} and u_id=#{u_id}
 	</update>
 
 	<update id="leave">
 		update schedule set s_leave = sysdate where s_code =
-		#{s_code}
+		#{s_code} and c_code = #{c_code} and u_id=#{u_id}
 	</update>
 
 	<select id="getWeekScheduleForE"
 		resultType="com.albago.domain.ScheduleVO">
 		<![CDATA[
-			select * from schedule where s_start >= to_date(#{s_start}, 'YYYYMMDD') and s_start < to_date(#{s_start},'YYYYMMDD')+7 and c_code=#{c_code} and u_id=#{u_id}
+			select * from schedule where s_start >= to_date(#{s_start}, 'YYYYMMDD')
+			and s_start < to_date(#{s_start},'YYYYMMDD')+7 and c_code=#{c_code} and u_id=#{u_id}
 		]]>
 	</select>
 
 	<select id="getMonthScheduleForE"
 		resultType="com.albago.domain.ScheduleVO">
-		select * from schedule where to_char(s_start,'YYYYMM') = #{s_start} and c_code=#{c_code} and
+		select * from schedule where to_char(s_start,'YYYYMM') =
+		#{s_start} and c_code=#{c_code} and
 		u_id=#{u_id}
 	</select>
 
@@ -40,63 +42,4 @@
 		to_date(#{s_end},'YYYY-MM-DD HH24:MI:SS'))
 	</insert>
 
-
-
-
-
-
-
-
-	<insert id="insertUser">
-		insert into userinfo (u_id, u_pw, u_name, u_email, u_gender, u_birth,
-		u_addr, u_phone, u_position) values(#{u_id},
-		<include refid="pw_encrypt"></include>
-		, #{u_name}, #{u_email}, #{u_gender}, #{u_birth}, #{u_addr},
-		#{u_phone}, #{u_position})
-	</insert>
-
-	<select id="readUser" resultType="com.albago.domain.UserInfoVO">
-		select * from userinfo where
-		u_id=#{u_id}
-	</select>
-
-	<sql id="pw_encrypt">
-		(select dbms_crypto.hash(to_clob(to_char(#{u_pw})),1) from
-		dual)
-	</sql>
-	<select id="login" resultType="int">
-		select count(u_id) from userinfo where u_id = #{u_id} and u_pw =
-		<include refid="pw_encrypt"></include>
-	</select>
-
-	<select id="matchNameEmail" resultType="int">
-		select count(u_id) from
-		userinfo where u_name = #{u_name} and u_email = #{u_email}
-	</select>
-
-	<select id="matchNameIdEmail" resultType="int">
-		select count(u_id) from
-		userinfo where u_name = #{u_name} and u_id = #{u_id} and u_email =
-		#{u_email}
-	</select>
-
-	<update id="resetPw">
-		update userinfo set u_pw =
-		<include refid="pw_encrypt"></include>
-		where u_id = #{u_id}
-	</update>
-
-	<delete id="deleteUser">
-		delete userinfo where u_id=#{u_id}
-	</delete>
-
-	<select id="idCheck" resultType="int">
-		select count(u_id) from userinfo
-		where u_id = #{u_id}
-	</select>
-
-	<select id="getId" resultType="String">
-		select u_id from userinfo where
-		u_name=#{u_name} and u_email=#{u_email}
-	</select>
 </mapper>

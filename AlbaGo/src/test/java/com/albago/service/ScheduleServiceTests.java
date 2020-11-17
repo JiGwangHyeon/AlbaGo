@@ -36,14 +36,24 @@ public class ScheduleServiceTests {
 	public void testArrive() {
 		log.info("testArrive............................");
 
-		log.info("schedule_arrive: " + service.arrive(5));
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setC_code(1234123521);
+		schedule.setS_code(1);
+		schedule.setU_id("kwang2951");
+
+		log.info("Schedule_arrive: " + service.arrive(schedule));
 	}
 
 //	@Test
 	public void testLeave() {
 		log.info("testLeave............................");
 
-		log.info("schedule_leave: " + service.leave(5));
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setC_code(1234123521);
+		schedule.setS_code(1);
+		schedule.setU_id("kwang2951");
+
+		log.info("Schedule_arrive: " + service.leave(schedule));
 	}
 
 //	@Test

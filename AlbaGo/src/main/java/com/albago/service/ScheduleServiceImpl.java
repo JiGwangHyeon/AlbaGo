@@ -26,17 +26,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public int arrive(int s_code) {
+	public int arrive(ScheduleVO schedule) {
 		log.info("arrive................");
 
-		return mapper.arrive(s_code);
+		return mapper.arrive(schedule);
 	}
 
 	@Override
-	public int leave(int s_code) {
+	public int leave(ScheduleVO schedule) {
 		log.info("leave................");
 
-		return mapper.leave(s_code);
+		return mapper.leave(schedule);
 	}
 
 	@Override

@@ -8,9 +8,9 @@ public interface ScheduleService {
 
 	public ScheduleVO getTodaysScheduleForE(ScheduleVO schedule);
 
-	public int arrive(int s_code);
+	public int arrive(ScheduleVO schedule);
 
-	public int leave(int s_code);
+	public int leave(ScheduleVO schedule);
 
 	public List<ScheduleVO> getWeekScheduleForE(ScheduleVO schedule);
 

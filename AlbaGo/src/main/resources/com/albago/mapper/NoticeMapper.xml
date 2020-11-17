@@ -5,4 +5,5 @@
 	<select id="getList" resultType="com.albago.domain.NoticeVO">
 		select n_code, n_title from notice where c_code=#{c_code}
 	</select>
+	
 </mapper>
