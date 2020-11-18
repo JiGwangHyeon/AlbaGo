@@ -19,7 +19,7 @@ public class UserInfoMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private UserInfoMapper mapper;
 
-	@Test
+//	@Test
 	public void testInsert() {
 		UserInfoVO userInfo = new UserInfoVO();
 		userInfo.setU_id("testid111111111");
@@ -35,10 +35,10 @@ public class UserInfoMapperTests {
 		mapper.insertUser(userInfo);
 	}
 
-//	@Test
+	@Test
 	public void testGet() {
 		log.info("testGet()................");
-		mapper.readUser("idtest");
+		mapper.readUser("gkdud0941");
 	}
 
 //	@Test

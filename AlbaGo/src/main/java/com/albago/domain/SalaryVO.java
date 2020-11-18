@@ -1,10 +1,8 @@
 package com.albago.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class SalaryVO {
 
 	private int sa_code;

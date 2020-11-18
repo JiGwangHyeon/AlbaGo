@@ -22,19 +22,26 @@
 
 	<update id="arrive">
 		update schedule set s_arrive = sysdate where s_code =
-		#{s_code} and c_code = #{c_code} and u_id=#{u_id}
+		#{s_code} and c_code = #{c_code} and u_id=#{u_id} and s_arrive is null
 	</update>
 
 	<update id="leave">
 		update schedule set s_leave = sysdate where s_code =
-		#{s_code} and c_code = #{c_code} and u_id=#{u_id}
+		#{s_code} and c_code = #{c_code} and u_id=#{u_id} and s_leave is null
 	</update>
 
 	<select id="getWeekScheduleForE"
 		resultType="com.albago.domain.ScheduleVO">
 		<![CDATA[
-			select * from schedule where s_start >= to_date(#{s_start}, 'YYYYMMDD')
-			and s_start < to_date(#{s_start},'YYYYMMDD')+7 and c_code=#{c_code} and u_id=#{u_id}
+			select 
+			s_code, c_code, u_id,
+			to_char(s_start, 'yyyy-mm-dd hh24:mi:ss') as s_start,
+			to_char(s_end, 'yyyy-mm-dd hh24:mi:ss') as s_end,
+			to_char(s_arrive, 'yyyy-mm-dd hh24:mi:ss') as s_arrive,
+			to_char(s_leave, 'yyyy-mm-dd hh24:mi:ss') as s_leave,
+			sr_code
+			from schedule where s_start >= to_date(#{s_start}, 'YYYYMMDD')
+			and s_start < to_date(#{s_start},'YYYYMMDD')+(interval '7' day) and c_code=#{c_code} and u_id=#{u_id}
 		]]>
 	</select>
 

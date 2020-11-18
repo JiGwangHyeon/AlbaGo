@@ -3,9 +3,43 @@
 <mapper namespace="com.albago.mapper.SalaryMapper">
 
 	<insert id="insertSalary">
-		insert into salary values(#{sa_code}, #{c_code},
+		insert into salary values(seq_sa_code.nextval,
+		#{c_code},
 		#{u_id}, #{s_code}, #{sa_base}, #{sa_wextra}, #{sa_nextra},
 		#{sa_oextra}, #{sa_hextra})
 	</insert>
+	<select id="getWeeklySumOfBase" resultType="com.albago.domain.SalaryVO">
+
+		<![CDATA[
+		select sum(sa_base) as sa_base,
+		c_code, u_id, count(*) as s_code from salary where s_code in (select s_code
+		from schedule
+		where ((c_code, u_id) in (select distinct c_code, u_id
+		from history
+		where h_qdate is null and h_position <>'A')
+		) and s_start>=
+		(trunc(sysdate) - (interval '8' day)) and s_start <
+		(trunc(sysdate) -
+		(interval '1' day)))
+		group by
+		c_code, u_id
+		]]>
+	</select>
+	
+	<update id="setWeeklyExtra">
+		<![CDATA[
+			update salary set sa_wextra = #{sa_wextra} where s_code in (
+	        select
+	            s_code
+	        from
+	            schedule
+	        where
+	            c_code = #{c_code}
+	            and u_id = #{u_id}	                    
+	            and s_start>= (trunc(sysdate) - (interval '8' day))
+	            and s_start < (trunc(sysdate) - (interval '1' day))
+	        )
+        ]]>
+	</update>
 
 </mapper>

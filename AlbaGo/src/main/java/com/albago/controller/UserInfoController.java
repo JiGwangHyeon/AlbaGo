@@ -123,14 +123,18 @@ public class UserInfoController {
 	}
 
 	// 회원 이름 가져오기
-	@GetMapping(value = "/get/name/{u_id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public String getName(@PathVariable("u_id") String u_id) {
+	@GetMapping(value = "/getName", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<String> getName(HttpServletRequest request) {
 		log.info("getName 호출.......................");
 
+		HttpSession session = request.getSession();
+		String u_id = (String) session.getAttribute("u_id");
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		String st = userInfoService.get(u_id).getU_name();
-		log.info(st);
 
-		return st; // String 데이터 출력
+		return new ResponseEntity<>(st, HttpStatus.OK); // String 데이터 출력
 	}
 
 	// 로그인

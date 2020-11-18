@@ -57,7 +57,7 @@ public class ScheduleMapperTests {
 		log.info("Schedule_arrive: " + mapper.leave(schedule));
 	}
 
-//	@Test
+	@Test
 	public void testGetWeekScheduleForE() {
 		log.info("testGetWeekScheduleForE........................");
 
@@ -79,6 +79,7 @@ public class ScheduleMapperTests {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		schedule.setS_start(sdf.format(s_start.getTime()));
+		log.info(sdf.format(s_start.getTime()));
 
 		log.info("schedule_getWeekScheduleForE: " + mapper.getWeekScheduleForE(schedule));
 	}
@@ -110,8 +111,8 @@ public class ScheduleMapperTests {
 		ScheduleVO schedule = new ScheduleVO();
 		schedule.setU_id("gkdud0941");
 		schedule.setC_code(1234123521);
-		schedule.setS_start("2020-11-15 09:00:00");
-		schedule.setS_end("2020-11-15 18:00:00");
+		schedule.setS_start("2020-11-18 09:00:00");
+		schedule.setS_end("2020-11-18 18:00:00");
 		schedule.setSr_code(6);
 
 		log.info("schedule_insertOnce: " + mapper.insertSchedule(schedule));
@@ -124,7 +125,7 @@ public class ScheduleMapperTests {
 		log.info("getListResult: " + mapper.getListTwoDaysAgo());
 	}
 
-	@Test
+//	@Test
 	public void testGetListByCompany() {
 		log.info("getListByCompany..................");
 

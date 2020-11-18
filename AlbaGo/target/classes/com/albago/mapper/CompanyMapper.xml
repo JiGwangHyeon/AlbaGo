@@ -13,5 +13,9 @@
 		h_qdate <> ''
 		]]>
 	</select>
-	
+
+	<select id="getCompanyListById" resultType="com.albago.domain.CompanyVO">
+		select * from company where c_code in (select c_code from history where u_id =#{u_id} and h_qdate is null)
+	</select>
+
 </mapper>

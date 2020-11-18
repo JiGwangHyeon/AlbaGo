@@ -13,18 +13,19 @@ public class CalcDate {
 	// 토요일, 일요일, 3/1, 8/15, 10/3, 10/9, 1/1
 	// 음력(12월 말일, 1/1, 2) 음력(4/8), 5/5
 	// 6/6, 음력(8/14, 15, 16) 12/25
-	public SalaryVO setSalaryVO(SalaryVO salary, ScheduleVO schedule) {
+	public static SalaryVO setSalaryVO(SalaryVO salary, ScheduleVO schedule) {
 
 		Calendar[] standardTime = getStandardTime(schedule);
+		double base = getBase(standardTime);
 		salary.setSa_base(getBase(standardTime));
 		salary.setSa_nextra(getNightExtra(standardTime));
-		salary.setSa_oextra(getOverExtra(standardTime));
-		salary.setSa_hextra(getHolidayExtra(standardTime));
+		salary.setSa_oextra(getOverExtra(base));
+		salary.setSa_hextra(getHolidayExtra(standardTime, base));
 
 		return salary;
 	}
 
-	public Calendar[] getStandardTime(ScheduleVO schedule) {
+	public static Calendar[] getStandardTime(ScheduleVO schedule) {
 
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -46,10 +47,13 @@ public class CalcDate {
 		cal[0] = (start.after(arrive)) ? start : arrive;
 		cal[1] = (end.after(leave)) ? leave : end;
 
+		System.out.println("cal0: " + cal[0].getTime());
+		System.out.println("cal1: " + cal[1].getTime());
+
 		return cal;
 	}
 
-	public double getBase(Calendar[] standardTime) {
+	public static double getBase(Calendar[] standardTime) {
 
 		long millis = standardTime[1].getTimeInMillis() - standardTime[0].getTimeInMillis();
 
@@ -59,18 +63,62 @@ public class CalcDate {
 		return hours;
 	}
 
-	public int getNightExtra(Calendar[] standardTime) {
+	public static double getNightExtra(Calendar[] standardTime) {
+		Calendar nStart = (Calendar) standardTime[0].clone();
+		nStart.set(Calendar.HOUR_OF_DAY, 22);
+		nStart.set(Calendar.MINUTE, 0);
+		nStart.set(Calendar.SECOND, 0);
+		Calendar nEnd = (Calendar) nStart.clone();
+		nEnd.add(Calendar.HOUR_OF_DAY, 8);
 
-		return 0;
+		System.out.println();
+
+		double nightExtra = 0;
+		long millis = 0;
+		if (nStart.after(standardTime[0])) {
+			if (standardTime[1].after(nStart) && nEnd.after(standardTime[1])) {
+				millis = standardTime[1].getTimeInMillis() - nStart.getTimeInMillis();
+			} else if (nEnd.after(nStart) && nEnd.before(standardTime[1])) {
+				millis = nEnd.getTimeInMillis() - nStart.getTimeInMillis();
+			}
+		} else if (standardTime[0].after(nStart)) {
+			if (standardTime[1].after(standardTime[0]) && nEnd.after(standardTime[1])) {
+				millis = standardTime[1].getTimeInMillis() - standardTime[0].getTimeInMillis();
+			} else if (nEnd.after(standardTime[0]) && nEnd.before(standardTime[1])) {
+				millis = nEnd.getTimeInMillis() - standardTime[0].getTimeInMillis();
+			}
+		}
+
+		nightExtra = (double) millis / 1000 / 60 / 60;
+		nightExtra = Math.round(nightExtra * 100) / 100.0;
+
+		return nightExtra;
 	}
 
-	public int getOverExtra(Calendar[] standardTime) {
+	public static double getOverExtra(double base) {
+		if (base > 8.0) {
+			base -= 8;
+		}
+		base = Math.round(base * 100) / 100.0;
 
-		return 0;
+		return base;
 	}
 
-	public int getHolidayExtra(Calendar[] standardTime) {
+	public static double getHolidayExtra(Calendar[] standardTime, double base) {
 
-		return 0;
+		if (Holiday.isHoliday(standardTime[0])) {
+			return base;
+		}
+		return 0.0;
+	}
+
+	public static double getWeeklyExtra(double sumOfBase, int count) {
+		if (sumOfBase > 40) {
+			return 8 / count;
+		} else if (sumOfBase >= 15) {
+			return sumOfBase / 5 / count;
+		} else {
+			return 0;
+		}
 	}
 }
