@@ -40,7 +40,12 @@ public class RepeatSchedule {
 
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 		Date time_start = timeFormat.parse(sr_start);
+		System.out.println(time_start);
 		Date time_end = timeFormat.parse(sr_end);
+		if (time_end.before(time_start)) {
+			long millis = time_end.getTime();
+			time_end.setTime(millis + 86400000);
+		}
 
 		Calendar now = Calendar.getInstance();
 		System.out.println("now: " + now.getTime());
@@ -51,7 +56,6 @@ public class RepeatSchedule {
 		System.out.println("end: " + end.getTime());
 
 		int interval = (int) (time_end.getTime() - time_start.getTime());
-		interval = (interval < 0) ? 86400000 + interval : interval;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -83,7 +87,7 @@ public class RepeatSchedule {
 			calEnd.add(Calendar.MILLISECOND, interval);
 			System.out.println("calEnd: " + calEnd.getTime());
 
-			if (now.get(Calendar.DAY_OF_WEEK) <= dayArr_int) {
+			if (now.get(Calendar.DAY_OF_WEEK) < dayArr_int) {
 
 				scheduleVo.setS_start(sdf.format(calStart.getTime()));
 				scheduleVo.setS_end(sdf.format(calEnd.getTime()));

@@ -57,7 +57,7 @@ public class ScheduleMapperTests {
 		log.info("Schedule_arrive: " + mapper.leave(schedule));
 	}
 
-	@Test
+//	@Test
 	public void testGetWeekScheduleForE() {
 		log.info("testGetWeekScheduleForE........................");
 
@@ -130,5 +130,19 @@ public class ScheduleMapperTests {
 		log.info("getListByCompany..................");
 
 		log.info("getListResult: " + mapper.getListByCompany(1234567890));
+	}
+
+	@Test
+	public void testCheckDuplicate() {
+		log.info("checkDuplicate...............");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+		schedule.setS_start("2020-11-18 09:00:00");
+		schedule.setS_end("2020-11-18 18:00:00");
+		schedule.setSr_code(6);
+
+		log.info("checkDuplicate: " + mapper.checkDuplicate(schedule));
 	}
 }

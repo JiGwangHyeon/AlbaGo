@@ -3,19 +3,17 @@
 <mapper namespace="com.albago.mapper.CompanyMapper">
 
 	<select id="getCompanyName" resultType="String">
-		select c_name from
-		company where c_code=#{c_code}
-	</select>
-
-	<select id="getCompanyList" resultType="String">
-		select * from history where u_id=#{u_id} and
-	<![CDATA[
-		h_qdate <> ''
-		]]>
+		SELECT c_name
+		FROM   company
+		WHERE  c_code = #{c_code} 
 	</select>
 
 	<select id="getCompanyListById" resultType="com.albago.domain.CompanyVO">
-		select * from company where c_code in (select c_code from history where u_id =#{u_id} and h_qdate is null)
+		SELECT *
+		FROM   company
+		WHERE  c_code IN (SELECT c_code
+		                  FROM   history
+		                  WHERE  u_id = #{u_id}
+		                         AND h_qdate IS NULL) 
 	</select>
-
 </mapper>

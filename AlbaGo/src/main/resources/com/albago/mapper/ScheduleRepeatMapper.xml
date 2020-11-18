@@ -4,11 +4,27 @@
 
 	<insert id="insertRepeat" parameterType="com.albago.domain.ScheduleRepeatVO">
 		<selectKey resultType="int" keyProperty="sr_code" order="BEFORE">
-			select seq_sr_code.nextval from dual 
+			SELECT seq_sr_code.NEXTVAL
+			FROM   dual 
 		</selectKey>
-		insert into schedule_repeat values
-		(#{sr_code}, #{c_code}, #{u_id}, to_date(#{sr_start},
-		'HH24:MI:SS'), to_date(#{sr_end}, 'HH24:MI:SS'), #{sr_repeat})
+		
+		INSERT INTO schedule_repeat
+		VALUES      ( #{sr_code},
+		              #{c_code},
+		              #{u_id},
+		              To_date( #{sr_start}, 'HH24:MI:SS'),
+		              To_date( #{sr_end}, 'HH24:MI:SS'),
+		              #{sr_repeat}) 
 	</insert>
+	
+	<select id="getListForCheckDuplicate" resultType="com.albago.domain.ScheduleRepeatVO">
+		SELECT sr_code,
+		       sr_repeat,
+		       sr_start,
+		       sr_end
+		FROM   schedule_repeat
+		WHERE  u_id = #{u_id}
+		       AND c_code = #{c_code}
+	</select>
 
 </mapper>

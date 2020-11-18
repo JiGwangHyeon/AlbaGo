@@ -2,70 +2,113 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.ScheduleMapper">
 
-	<select id="getTodaysScheduleForE"
-		resultType="com.albago.domain.ScheduleVO">
-		select * from schedule where c_code=#{c_code} and
-		u_id=#{u_id} and to_char(s_start, 'yyyy-mm-dd')=to_char(sysdate,
-		'yyyy-mm-dd')
+	<select id="getTodaysScheduleForE" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		FROM   schedule
+		WHERE  c_code = #{c_code}
+		       AND u_id = #{u_id}
+		       AND To_char(s_start, 'yyyy-mm-dd') = To_char(sysdate, 'yyyy-mm-dd') 
 	</select>
 	
 	<select id="getListTwoDaysAgo" resultType="com.albago.domain.ScheduleVO">
-		select * from schedule where to_char(s_start,'YYYYMMDD') = to_char(sysdate-(interval '2' day), 'YYYYMMDD')
+		SELECT *
+		FROM   schedule
+		WHERE  To_char(s_start, 'YYYYMMDD') = To_char(SYSDATE - ( interval '2' day ), 'YYYYMMDD') 
 	</select>
 	
 	<insert id="copyListTwoDaysAgo">
 	</insert>
 	
 	<select id="getListByCompany" resultType="com.albago.domain.ScheduleVO">
-		select * from schedule where c_code=#{c_code}
+		SELECT *
+		FROM   schedule
+		WHERE  c_code = #{c_code} 
 	</select>
 
 	<update id="arrive">
-		update schedule set s_arrive = sysdate where s_code =
-		#{s_code} and c_code = #{c_code} and u_id=#{u_id} and s_arrive is null
+		UPDATE schedule
+		SET    s_arrive = sysdate
+		WHERE  s_code = #{s_code}
+		       AND c_code = #{c_code}
+		       AND u_id = #{u_id}
+		       AND s_arrive IS NULL 
 	</update>
 
 	<update id="leave">
-		update schedule set s_leave = sysdate where s_code =
-		#{s_code} and c_code = #{c_code} and u_id=#{u_id} and s_leave is null
+		UPDATE schedule
+		SET    s_leave = sysdate
+		WHERE  s_code = #{s_code}
+		       AND c_code = #{c_code}
+		       AND u_id = #{u_id}
+		       AND s_leave IS NULL 
 	</update>
 
-	<select id="getWeekScheduleForE"
-		resultType="com.albago.domain.ScheduleVO">
+	<select id="getWeekScheduleForE" resultType="com.albago.domain.ScheduleVO">
 		<![CDATA[
-			select 
-			s_code, c_code, u_id,
-			to_char(s_start, 'yyyy-mm-dd hh24:mi:ss') as s_start,
-			to_char(s_end, 'yyyy-mm-dd hh24:mi:ss') as s_end,
-			to_char(s_arrive, 'yyyy-mm-dd hh24:mi:ss') as s_arrive,
-			to_char(s_leave, 'yyyy-mm-dd hh24:mi:ss') as s_leave,
-			sr_code
-			from schedule where s_start >= to_date(#{s_start}, 'YYYYMMDD')
-			and s_start < to_date(#{s_start},'YYYYMMDD')+(interval '7' day) and c_code=#{c_code} and u_id=#{u_id}
+			SELECT s_code,
+			       c_code,
+			       u_id,
+			       To_char(s_start, 'yyyy-mm-dd hh24:mi:ss')  AS s_start,
+			       To_char(s_end, 'yyyy-mm-dd hh24:mi:ss')    AS s_end,
+			       To_char(s_arrive, 'yyyy-mm-dd hh24:mi:ss') AS s_arrive,
+			       To_char(s_leave, 'yyyy-mm-dd hh24:mi:ss')  AS s_leave,
+			       sr_code
+			FROM   schedule
+			WHERE  s_start >= to_date(#{s_start}, 'YYYYMMDD')
+				AND    s_start < to_date(#{s_start},'YYYYMMDD')+(interval '7' day)
+				AND    c_code=#{c_code}
+				AND    u_id=#{u_id}
+			ORDER BY
+				s_start
 		]]>
 	</select>
 
-	<select id="getMonthScheduleForE"
-		resultType="com.albago.domain.ScheduleVO">
-		select * from schedule where to_char(s_start,'YYYYMM') =
-		#{s_start} and c_code=#{c_code} and
-		u_id=#{u_id}
+	<select id="getMonthScheduleForE" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		FROM   schedule
+		WHERE  To_char(s_start, 'YYYYMM') = #{s_start}
+		       AND c_code = #{c_code}
+		       AND u_id = #{u_id} 
+		ORDER BY
+			   s_start
 	</select>
 
 	<insert id="insertSchedule">
-		insert into schedule (s_code, c_code, u_id, s_start,
-		s_end
-		<if test="sr_code != null">
-			, sr_code
-		</if>
-		) values
-		(seq_s_code.nextval, #{c_code}, #{u_id},
-		to_date(#{s_start},'YYYY-MM-DD HH24:MI:SS'),
-		to_date(#{s_end},'YYYY-MM-DD HH24:MI:SS')
-		<if test="sr_code != null">
-			, #{sr_code}
-		</if>
-		)
+		INSERT INTO schedule
+		            (
+						s_code,
+						c_code,
+						u_id,
+						s_start,
+						s_end
+						<if test="sr_code != null"> ,
+							sr_code
+						</if>
+		            )
+		            VALUES
+		            (
+						seq_s_code.NEXTVAL,
+						#{c_code},
+						#{u_id},
+						to_date(#{s_start},'YYYY-MM-DD HH24:MI:SS'),
+						to_date(#{s_end},'YYYY-MM-DD HH24:MI:SS')
+						<if test="sr_code != null"> ,
+							#{sr_code}
+						</if>
+		            )
 	</insert>
-
+	
+	<select id="checkDuplicate" resultType="int">
+		<![CDATA[
+			SELECT Count(s_code)
+			FROM   (SELECT *
+			        FROM   schedule
+			        WHERE  u_id = #{u_id}
+			               AND c_code = #{c_code}
+			               AND Trunc(s_start) = trunc(to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss'))) tbl
+			WHERE  ( tbl.s_start <= to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end > to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') )
+			        OR ( tbl.s_start < to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end > to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') )
+			        OR ( tbl.s_start > to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end < to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') ) 
+		]]>		
+	</select>
 </mapper>

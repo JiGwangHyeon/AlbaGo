@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.HistoryMapper">
-
 	<select id="getCompanyList" resultType="String">
-		select c_name from
-		company where c_code=#{c_code}
+		SELECT c_name
+		FROM   company
+		WHERE  c_code = #{c_code} 
 	</select>
 
 	<select id="getCompanyList" resultType="String">
-		select * from history where u_id=#{u_id} and
-	<![CDATA[
-		h_qdate <> ''
+		<![CDATA[
+			SELECT *
+			FROM   history
+			WHERE  u_id = #{u_id}
+			       AND h_qdate IS NULL 
 		]]>
 	</select>
-	
 </mapper>

@@ -19,7 +19,7 @@ public class ScheduleRepeatServiceTests {
 	@Setter(onMethod_ = @Autowired)
 	private ScheduleRepeatService service;
 
-	@Test
+//	@Test
 	public void testInsert() {
 		log.info("testInsert............................");
 
@@ -33,5 +33,19 @@ public class ScheduleRepeatServiceTests {
 
 		log.info("testInsert_result: " + service.insertRepeat(scheduleRepeat));
 		log.info("sr_code: " + scheduleRepeat.getSr_code());
+	}
+
+	@Test
+	public void testcheckDuplicateRepeat() {
+		log.info("testCheck............................");
+
+		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
+
+		scheduleRepeat.setC_code(1234123521);
+		scheduleRepeat.setU_id("a");
+		scheduleRepeat.setSr_start("13:00:00");
+		scheduleRepeat.setSr_end("15:00:00");
+		scheduleRepeat.setSr_repeat("7");
+
 	}
 }

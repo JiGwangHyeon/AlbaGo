@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.EmailAuthMapper">
-	
 	<insert id="create">
-		insert into emailauth (u_email, a_code) values (#{u_email}, #{a_code})
+		INSERT INTO emailauth
+		            (u_email,
+		             a_code)
+		VALUES      ( #{u_email},
+		              #{a_code}) 
 	</insert>
 	
 	<select id="match" resultType="int">
-		select count(*) from emailauth where u_email=#{u_email} and a_code=#{a_code} and
 		<![CDATA[
-		a_date >= sysdate - (interval '3' minute)
+			SELECT Count(*)
+			FROM   emailauth
+			WHERE  u_email=#{u_email}
+			AND    a_code=#{a_code}
+			AND    a_date >= SYSDATE - (interval '3' minute)
 		]]>
 	</select>
-	
 </mapper>

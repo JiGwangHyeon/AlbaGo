@@ -107,10 +107,10 @@ public class ScheduleServiceTests {
 		log.info("testInsertOnce.....................");
 
 		ScheduleVO schedule = new ScheduleVO();
-		schedule.setU_id("gkdud0941");
-		schedule.setC_code(1234123521);
-		schedule.setS_start("2020-11-15");
-		schedule.setS_end("2020-11-15");
+		schedule.setU_id("yu0372");
+		schedule.setC_code(1234567890);
+		schedule.setS_start("2020-11-18 09:00:00");
+		schedule.setS_end("2020-11-18 18:00:00");
 
 		log.info("schedule_getMonthScheduleForE: " + service.insertSchedule(schedule));
 

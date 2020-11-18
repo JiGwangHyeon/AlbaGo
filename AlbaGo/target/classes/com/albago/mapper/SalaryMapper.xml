@@ -3,43 +3,55 @@
 <mapper namespace="com.albago.mapper.SalaryMapper">
 
 	<insert id="insertSalary">
-		insert into salary values(seq_sa_code.nextval,
-		#{c_code},
-		#{u_id}, #{s_code}, #{sa_base}, #{sa_wextra}, #{sa_nextra},
-		#{sa_oextra}, #{sa_hextra})
+		INSERT INTO salary
+		VALUES     (seq_sa_code.nextval,
+		            #{c_code},
+		            #{u_id},
+		            #{s_code},
+		            #{sa_base},
+		            #{sa_wextra},
+		            #{sa_nextra},
+		            #{sa_oextra},
+		            #{sa_hextra}) 
 	</insert>
 	<select id="getWeeklySumOfBase" resultType="com.albago.domain.SalaryVO">
-
 		<![CDATA[
-		select sum(sa_base) as sa_base,
-		c_code, u_id, count(*) as s_code from salary where s_code in (select s_code
-		from schedule
-		where ((c_code, u_id) in (select distinct c_code, u_id
-		from history
-		where h_qdate is null and h_position <>'A')
-		) and s_start>=
-		(trunc(sysdate) - (interval '8' day)) and s_start <
-		(trunc(sysdate) -
-		(interval '1' day)))
-		group by
-		c_code, u_id
+			SELECT SUM(sa_base) AS sa_base,
+			       c_code,
+			       u_id,
+			       Count(*)     AS s_code
+			FROM   salary
+			WHERE  s_code IN (
+							  SELECT s_code
+			                  FROM   schedule
+			                  WHERE  ( ( c_code, u_id ) IN (
+			                  								SELECT DISTINCT c_code,
+			                                                                u_id
+			                                                FROM   history
+			                                                WHERE  h_qdate IS NULL
+			                                                       AND h_position != 'A'
+	                                                       ) )
+			                         AND s_start >= ( Trunc(SYSDATE) - ( interval '8' day ) )
+			                         AND s_start < ( Trunc(SYSDATE) - ( interval '1' day ) )
+			                 )
+			GROUP  BY c_code,
+			          u_id
 		]]>
 	</select>
 	
 	<update id="setWeeklyExtra">
 		<![CDATA[
-			update salary set sa_wextra = #{sa_wextra} where s_code in (
-	        select
-	            s_code
-	        from
-	            schedule
-	        where
-	            c_code = #{c_code}
-	            and u_id = #{u_id}	                    
-	            and s_start>= (trunc(sysdate) - (interval '8' day))
-	            and s_start < (trunc(sysdate) - (interval '1' day))
-	        )
+			UPDATE salary
+			SET    sa_wextra = #{sa_wextra}
+			WHERE  s_code IN
+			       (
+			              SELECT s_code
+			              FROM   schedule
+			              WHERE  c_code = #{c_code}
+					             AND    u_id = #{u_id}
+					             AND    s_start>= (trunc(SYSDATE) - (interval '8' day))
+					             AND    s_start < (trunc(SYSDATE) - (interval '1' day))
+	               )
         ]]>
 	</update>
-
 </mapper>
