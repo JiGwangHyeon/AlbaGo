@@ -81,7 +81,7 @@
 						u_id,
 						s_start,
 						s_end
-						<if test="sr_code != null"> ,
+						<if test='sr_code!=0'> ,
 							sr_code
 						</if>
 		            )
@@ -92,7 +92,7 @@
 						#{u_id},
 						to_date(#{s_start},'YYYY-MM-DD HH24:MI:SS'),
 						to_date(#{s_end},'YYYY-MM-DD HH24:MI:SS')
-						<if test="sr_code != null"> ,
+						<if test='sr_code!=0'> ,
 							#{sr_code}
 						</if>
 		            )
@@ -110,5 +110,14 @@
 			        OR ( tbl.s_start < to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end > to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') )
 			        OR ( tbl.s_start > to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end < to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') ) 
 		]]>		
+	</select>
+	
+	<select id="checkDuplicateForRepeat" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		FROM   schedule
+		WHERE  To_char(s_start, 'd') = #{sr_code}
+		       AND u_id = #{u_id}
+		       AND c_code = #{c_code}
+		       AND s_start > sysdate
 	</select>
 </mapper>

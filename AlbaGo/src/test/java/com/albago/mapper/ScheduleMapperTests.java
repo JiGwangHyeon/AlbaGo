@@ -113,7 +113,7 @@ public class ScheduleMapperTests {
 		schedule.setC_code(1234123521);
 		schedule.setS_start("2020-11-18 09:00:00");
 		schedule.setS_end("2020-11-18 18:00:00");
-		schedule.setSr_code(6);
+		schedule.setSr_code(0);
 
 		log.info("schedule_insertOnce: " + mapper.insertSchedule(schedule));
 	}
@@ -132,7 +132,7 @@ public class ScheduleMapperTests {
 		log.info("getListResult: " + mapper.getListByCompany(1234567890));
 	}
 
-	@Test
+//	@Test
 	public void testCheckDuplicate() {
 		log.info("checkDuplicate...............");
 
@@ -144,5 +144,17 @@ public class ScheduleMapperTests {
 		schedule.setSr_code(6);
 
 		log.info("checkDuplicate: " + mapper.checkDuplicate(schedule));
+	}
+
+	@Test
+	public void testCheckDuplicateForRepeat() {
+		log.info("checkDuplicateForRepeat");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setU_id("gkdud0941");
+		schedule.setC_code(1234123521);
+		schedule.setSr_code(4);
+
+		mapper.checkDuplicateForRepeat(schedule);
 	}
 }
