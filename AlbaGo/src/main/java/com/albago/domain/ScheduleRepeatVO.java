@@ -6,7 +6,7 @@ import lombok.Data;
 public class ScheduleRepeatVO {
 
 	private int sr_code;
-	private int c_code;
+	private long c_code;
 	private String u_id;
 	private String sr_start;
 	private String sr_end;

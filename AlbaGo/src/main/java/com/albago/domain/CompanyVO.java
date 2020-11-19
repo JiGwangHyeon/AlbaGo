@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CompanyVO {
 
-	private int c_code;
+	private long c_code;
 	private String c_name;
 	private String c_addr;
 	private String c_owner;

@@ -6,7 +6,7 @@ import lombok.Data;
 public class SalaryVO {
 
 	private int sa_code;
-	private int c_code;
+	private long c_code;
 	private String u_id;
 	private int s_code;
 	private double sa_base;

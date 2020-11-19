@@ -22,7 +22,7 @@ public class NoticeController {
 	private NoticeService noticeService;
 
 	@RequestMapping(value = "/getList/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public List<NoticeVO> getList(@PathVariable("c_code") int c_code) {
+	public List<NoticeVO> getList(@PathVariable("c_code") long c_code) {
 		log.info("getNoticeList 호출...................");
 		log.info("c_code: " + c_code);
 

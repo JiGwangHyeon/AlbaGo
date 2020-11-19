@@ -7,6 +7,9 @@ import java.util.Calendar;
 import com.albago.domain.SalaryVO;
 import com.albago.domain.ScheduleVO;
 
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 public class CalcDate {
 
 	// 휴일
@@ -64,33 +67,44 @@ public class CalcDate {
 	}
 
 	public static double getNightExtra(Calendar[] standardTime) {
+
 		Calendar nStart = (Calendar) standardTime[0].clone();
+
+		if (standardTime[0].get(Calendar.HOUR) < 6) {
+			nStart.add(Calendar.DATE, -1);
+		}
+
 		nStart.set(Calendar.HOUR_OF_DAY, 22);
 		nStart.set(Calendar.MINUTE, 0);
 		nStart.set(Calendar.SECOND, 0);
+		log.fatal("nStart: " + nStart.getTime());
 		Calendar nEnd = (Calendar) nStart.clone();
 		nEnd.add(Calendar.HOUR_OF_DAY, 8);
+		log.fatal("nEnd: " + nEnd.getTime());
 
-		System.out.println();
+		log.fatal("sStart: " + standardTime[0].getTime());
+		log.fatal("sEnd: " + standardTime[1].getTime());
 
-		double nightExtra = 0;
 		long millis = 0;
-		if (nStart.after(standardTime[0])) {
+		if (nStart.after(standardTime[0]) || nStart.equals(standardTime[0])) {
 			if (standardTime[1].after(nStart) && nEnd.after(standardTime[1])) {
 				millis = standardTime[1].getTimeInMillis() - nStart.getTimeInMillis();
-			} else if (nEnd.after(nStart) && nEnd.before(standardTime[1])) {
+			} else if (nEnd.before(standardTime[1])) {
 				millis = nEnd.getTimeInMillis() - nStart.getTimeInMillis();
 			}
 		} else if (standardTime[0].after(nStart)) {
-			if (standardTime[1].after(standardTime[0]) && nEnd.after(standardTime[1])) {
+			if (nEnd.after(standardTime[1])) {
 				millis = standardTime[1].getTimeInMillis() - standardTime[0].getTimeInMillis();
 			} else if (nEnd.after(standardTime[0]) && nEnd.before(standardTime[1])) {
 				millis = nEnd.getTimeInMillis() - standardTime[0].getTimeInMillis();
 			}
 		}
+		log.fatal("millis: " + millis);
 
+		double nightExtra = 0;
 		nightExtra = (double) millis / 1000 / 60 / 60;
 		nightExtra = Math.round(nightExtra * 100) / 100.0;
+		log.fatal(nightExtra);
 
 		return nightExtra;
 	}
@@ -98,10 +112,11 @@ public class CalcDate {
 	public static double getOverExtra(double base) {
 		if (base > 8.0) {
 			base -= 8;
-		}
-		base = Math.round(base * 100) / 100.0;
+			base = Math.round(base * 100) / 100.0;
+			return base;
+		} else
+			return 0;
 
-		return base;
 	}
 
 	public static double getHolidayExtra(Calendar[] standardTime, double base) {
