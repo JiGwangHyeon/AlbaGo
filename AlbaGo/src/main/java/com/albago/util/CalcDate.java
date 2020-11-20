@@ -70,7 +70,7 @@ public class CalcDate {
 
 		Calendar nStart = (Calendar) standardTime[0].clone();
 
-		if (standardTime[0].get(Calendar.HOUR) < 6) {
+		if (standardTime[0].get(Calendar.HOUR_OF_DAY) < 6) {
 			nStart.add(Calendar.DATE, -1);
 		}
 

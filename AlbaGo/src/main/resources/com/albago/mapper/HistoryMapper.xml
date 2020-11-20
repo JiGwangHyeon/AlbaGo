@@ -17,7 +17,7 @@
 	</select> -->
 	
 	<select id="makeDummy" resultType="com.albago.domain.HistoryVO">
-		select c_code, u_id from history where h_position='E' and to_char(h_rdate,'yyyymmdd') ='20200816'
+		select c_code, u_id from history where h_position='E' and to_char(h_rdate,'yyyymmdd') ='20200701'
 	</select>
 	
 </mapper>

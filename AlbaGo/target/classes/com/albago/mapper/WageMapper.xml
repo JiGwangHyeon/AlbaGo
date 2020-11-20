@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.albago.mapper.WageMapper">
+
+	<insert id="insertMonthly">
+	<![CDATA[
+	INSERT INTO wage
+	            (w_code
+	             , c_code
+	             , u_id
+	             , w_base
+	             , w_wextra
+	             , w_nextra
+	             , w_oextra
+	             , w_hextra
+	             , w_month)
+	SELECT seq_w_code.NEXTVAL
+	       , c_code
+	       , u_id
+	       , w_base
+	       , w_wextra
+	       , w_nextra
+	       , w_oextra
+	       , w_hextra
+	       , To_char(SYSDATE - ( interval '1' month ), 'yyyymm')
+	  FROM ((SELECT c_code
+	                , u_id
+	                , SUM(sa_base)   w_base
+	                , SUM(sa_wextra) w_wextra
+	                , SUM(sa_nextra) w_nextra
+	                , SUM(sa_oextra) w_oextra
+	                , SUM(sa_hextra) w_hextra
+	           FROM salary
+	          WHERE ( c_code, s_code ) IN (SELECT c_code
+	                                              , s_code
+	                                         FROM schedule
+	                                        WHERE ( s_start < Trunc(SYSDATE) - ( interval '1' day ) )
+	                                          AND ( s_start >= Trunc(SYSDATE) - ( interval '1' day ) - ( interval '1' month ) )
+	                                          AND ( c_code IN (SELECT c_code
+	                                                             FROM company
+	                                                            WHERE c_eday = To_char(SYSDATE - ( interval '2' day ), 'dd')) ))
+	          GROUP BY c_code
+	                   , u_id))
+		]]>      
+	</insert> 
+</mapper>

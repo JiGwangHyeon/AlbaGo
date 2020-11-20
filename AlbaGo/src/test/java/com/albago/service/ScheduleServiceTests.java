@@ -141,9 +141,9 @@ public class ScheduleServiceTests {
 
 			scheduleRepeat.setC_code(hvo.getC_code());
 			scheduleRepeat.setU_id(hvo.getU_id());
-			scheduleRepeat.setSr_start("05:00:00");
-			scheduleRepeat.setSr_end("10:00:00");
-			scheduleRepeat.setSr_repeat("57");
+			scheduleRepeat.setSr_start("22:00:00");
+			scheduleRepeat.setSr_end("08:00:00");
+			scheduleRepeat.setSr_repeat("56");
 
 			int result = scheduleRepeatService.insertRepeat(scheduleRepeat);
 
