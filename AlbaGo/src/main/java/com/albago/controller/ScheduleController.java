@@ -36,7 +36,7 @@ public class ScheduleController {
 
 	// 해당 직원의 오늘의 근무 일정 조회
 	@GetMapping(value = "/todays/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<ScheduleVO> getTodaysScheduleForE(@PathVariable("c_code") int c_code,
+	public ResponseEntity<ScheduleVO> getTodaysScheduleForE(@PathVariable("c_code") long c_code,
 			HttpServletRequest request) {
 		log.info("getTodaysSchedule 호출.........................");
 
@@ -55,7 +55,7 @@ public class ScheduleController {
 
 	// 출근
 	@GetMapping(value = "/arrive/{s_code}/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<Integer> arrive(@PathVariable("s_code") int s_code, @PathVariable("c_code") int c_code,
+	public ResponseEntity<Integer> arrive(@PathVariable("s_code") int s_code, @PathVariable("c_code") long c_code,
 			HttpServletRequest request) {
 		log.info("arrive 호출............");
 
@@ -75,7 +75,7 @@ public class ScheduleController {
 
 	// 퇴근
 	@GetMapping(value = "/leave/{s_code}/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<Integer> leave(@PathVariable("s_code") int s_code, @PathVariable("c_code") int c_code,
+	public ResponseEntity<Integer> leave(@PathVariable("s_code") int s_code, @PathVariable("c_code") long c_code,
 			HttpServletRequest request) {
 		log.info("leave 호출............");
 
@@ -94,7 +94,7 @@ public class ScheduleController {
 
 	// 주별 일정 불러오기
 	@GetMapping(value = "/week/{c_code}/{week}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<List<ScheduleVO>> getWeekScheduleForE(@PathVariable("c_code") int c_code,
+	public ResponseEntity<List<ScheduleVO>> getWeekScheduleForE(@PathVariable("c_code") long c_code,
 			@PathVariable("week") int week, HttpServletRequest request) {
 		log.info("getWeekScheduleForE 호출............");
 
@@ -122,7 +122,7 @@ public class ScheduleController {
 
 	// 월별 일정 불러오기
 	@GetMapping(value = "/month/{c_code}/{year}/{month}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<List<ScheduleVO>> getMonthScheduleForE(@PathVariable("c_code") int c_code,
+	public ResponseEntity<List<ScheduleVO>> getMonthScheduleForE(@PathVariable("c_code") long c_code,
 			@PathVariable("year") int year, @PathVariable("month") int month, HttpServletRequest request) {
 		log.info("getMonthScheduleForE 호출............");
 
@@ -146,7 +146,7 @@ public class ScheduleController {
 
 	// 일정 한개만 추가
 	@GetMapping(value = "/add/{c_code}/{s_start:.+}/{s_end:.+}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<Integer> insertOnce(@PathVariable("c_code") int c_code,
+	public ResponseEntity<Integer> insertOnce(@PathVariable("c_code") long c_code,
 			@PathVariable("s_start") String s_start, @PathVariable("s_end") String s_end, HttpServletRequest request) {
 		log.info("insertOnce 호출............");
 
@@ -167,7 +167,7 @@ public class ScheduleController {
 	// 일정 매 주 반복 추가
 	@GetMapping(value = "/add/repeat/{c_code}/{repeat}/{start}/{end}", produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<Integer> insertWeeklyRepeat(@PathVariable("c_code") int c_code,
+	public ResponseEntity<Integer> insertWeeklyRepeat(@PathVariable("c_code") long c_code,
 			@PathVariable("repeat") String repeat, @PathVariable("start") String start, @PathVariable("end") String end,
 			HttpServletRequest request) throws ParseException {
 		log.info("insertWeeklyRepeat 호출............");

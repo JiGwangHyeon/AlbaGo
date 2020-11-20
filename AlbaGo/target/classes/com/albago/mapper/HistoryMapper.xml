@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.HistoryMapper">
-	<select id="getCompanyList" resultType="String">
+<!-- 	<select id="getCompanyList" resultType="String">
 		SELECT c_name
 		FROM   company
 		WHERE  c_code = #{c_code} 
@@ -14,5 +14,10 @@
 			WHERE  u_id = #{u_id}
 			       AND h_qdate IS NULL 
 		]]>
+	</select> -->
+	
+	<select id="makeDummy" resultType="com.albago.domain.HistoryVO">
+		select c_code, u_id from history where h_position='E' and to_char(h_rdate,'yyyymmdd') ='20200701'
 	</select>
+	
 </mapper>

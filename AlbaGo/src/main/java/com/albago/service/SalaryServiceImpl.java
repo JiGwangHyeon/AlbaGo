@@ -2,6 +2,7 @@ package com.albago.service;
 
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.albago.domain.SalaryVO;
@@ -28,10 +29,14 @@ public class SalaryServiceImpl implements SalaryService {
 		return salaryMapper.insertSalary(salary);
 	}
 
+	@Scheduled(cron = "0 0 0 * * ?")
 	public void convertScheduleToSalary() {
 		List<ScheduleVO> schedule = scheduleMapper.getListTwoDaysAgo();
 
 		for (ScheduleVO sc : schedule) {
+			if (sc.getS_arrive().trim().isEmpty() || sc.getS_leave().trim().isEmpty()) {
+				continue;
+			}
 			SalaryVO salary = new SalaryVO();
 			salary.setC_code(sc.getC_code());
 			salary.setU_id(sc.getU_id());
@@ -41,6 +46,7 @@ public class SalaryServiceImpl implements SalaryService {
 		}
 	}
 
+	@Scheduled(cron = "0 0 0 ? * 3")
 	public void setWeeklyExtra() {
 		List<SalaryVO> list = salaryMapper.getWeeklySumOfBase();
 

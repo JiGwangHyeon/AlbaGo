@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.albago.domain.SalaryVO;
+import com.albago.domain.ScheduleVO;
 import com.albago.util.CalcDate;
 
 import lombok.Setter;
@@ -20,7 +21,10 @@ import lombok.extern.log4j.Log4j;
 public class SalaryMapperTests {
 
 	@Setter(onMethod_ = @Autowired)
-	private SalaryMapper mapper;
+	private SalaryMapper salaryMapper;
+
+	@Setter(onMethod_ = @Autowired)
+	private ScheduleMapper scheduleMapper;
 
 //	@Test
 	public void testInsert() {
@@ -37,26 +41,40 @@ public class SalaryMapperTests {
 		salary.setSa_nextra(0);
 		salary.setSa_oextra(0);
 
-		log.info("insertResult: " + mapper.insertSalary(salary));
+		log.info("insertResult: " + salaryMapper.insertSalary(salary));
 	}
 
-	@Test
+//	@Test
 	public void testGetWeeklySumOfBase() {
 		log.info("testGetWeeklySumOfBase............");
 
-		log.info("result: " + mapper.getWeeklySumOfBase());
+		log.info("result: " + salaryMapper.getWeeklySumOfBase());
 	}
 
 //	@Test
 	public void testSetWeeklyExtra() {
 		log.info("testSetWeeklyExtra....................");
 
-		List<SalaryVO> list = mapper.getWeeklySumOfBase();
+		List<SalaryVO> list = salaryMapper.getWeeklySumOfBase();
 
 		for (SalaryVO sa : list) {
 			double we = CalcDate.getWeeklyExtra(sa.getSa_base(), sa.getS_code());
 			sa.setSa_wextra(we);
-			mapper.setWeeklyExtra(sa);
+			salaryMapper.setWeeklyExtra(sa);
+		}
+	}
+
+	@Test
+	public void test() {
+		List<ScheduleVO> schedule = scheduleMapper.getListTwoDaysAgo();
+
+		for (ScheduleVO sc : schedule) {
+			SalaryVO salary = new SalaryVO();
+			salary.setC_code(sc.getC_code());
+			salary.setU_id(sc.getU_id());
+			salary.setS_code(sc.getS_code());
+			CalcDate.setSalaryVO(salary, sc);
+			salaryMapper.insertSalary(salary);
 		}
 	}
 }

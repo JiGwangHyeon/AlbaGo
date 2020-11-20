@@ -1,14 +1,21 @@
 package com.albago.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.albago.domain.HistoryVO;
+import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
+import com.albago.mapper.HistoryMapper;
+import com.albago.util.RepeatSchedule;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -20,6 +27,15 @@ public class ScheduleServiceTests {
 
 	@Setter(onMethod_ = @Autowired)
 	private ScheduleService service;
+
+	@Setter(onMethod_ = @Autowired)
+	private HistoryMapper mapper;
+
+	@Setter(onMethod_ = @Autowired)
+	private ScheduleRepeatService scheduleRepeatService;
+
+	@Setter(onMethod_ = @Autowired)
+	private ScheduleService scheduleService;
 
 //	@Test
 	public void testGetTodaysSchedule() {
@@ -113,6 +129,34 @@ public class ScheduleServiceTests {
 		schedule.setS_end("2020-11-18 18:00:00");
 
 		log.info("schedule_getMonthScheduleForE: " + service.insertSchedule(schedule));
+
+	}
+
+	@Test
+	public void testDummy() {
+
+		List<HistoryVO> list = mapper.makeDummy();
+		for (HistoryVO hvo : list) {
+			ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
+
+			scheduleRepeat.setC_code(hvo.getC_code());
+			scheduleRepeat.setU_id(hvo.getU_id());
+			scheduleRepeat.setSr_start("22:00:00");
+			scheduleRepeat.setSr_end("08:00:00");
+			scheduleRepeat.setSr_repeat("56");
+
+			int result = scheduleRepeatService.insertRepeat(scheduleRepeat);
+
+			if (result == 1) {
+				RepeatSchedule rs = new RepeatSchedule();
+				try {
+					result = rs.whenInsert(scheduleRepeat, scheduleService);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 
 	}
 }

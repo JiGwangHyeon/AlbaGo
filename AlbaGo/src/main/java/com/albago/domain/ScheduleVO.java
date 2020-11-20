@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ScheduleVO {
 	private int s_code;
-	private int c_code;
+	private long c_code;
 	private String u_id;
 	private String s_start;
 	private String s_end;

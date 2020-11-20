@@ -20,7 +20,7 @@ public interface ScheduleMapper {
 
 	public List<ScheduleVO> getListTwoDaysAgo();
 
-	public List<ScheduleVO> getListByCompany(int c_code);
+	public List<ScheduleVO> getListByCompany(long c_code);
 
 	public int checkDuplicate(ScheduleVO schedule);
 

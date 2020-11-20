@@ -32,7 +32,7 @@ public class RepeatSchedule {
 	public int whenInsert(ScheduleRepeatVO scheduleRepeat, ScheduleService schedule) throws ParseException {
 
 		int sr_code = scheduleRepeat.getSr_code();
-		int c_code = scheduleRepeat.getC_code();
+		long c_code = scheduleRepeat.getC_code();
 		String u_id = scheduleRepeat.getU_id();
 		String sr_start = scheduleRepeat.getSr_start();
 		String sr_end = scheduleRepeat.getSr_end();

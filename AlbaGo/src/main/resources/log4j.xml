@@ -17,7 +17,11 @@
 	
 		<!-- Application Loggers -->
 	<logger name="com.albago.service">
-		<level value="all" />
+		<level value="infol" />
+	</logger>
+	
+	<logger name="com.albago.util">
+		<level value="ingo" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->

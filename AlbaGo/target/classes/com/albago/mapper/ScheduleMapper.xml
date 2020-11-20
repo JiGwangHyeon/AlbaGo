@@ -7,13 +7,13 @@
 		FROM   schedule
 		WHERE  c_code = #{c_code}
 		       AND u_id = #{u_id}
-		       AND To_char(s_start, 'yyyy-mm-dd') = To_char(sysdate, 'yyyy-mm-dd') 
+		       AND To_char(s_start, 'yyyy-mm-dd') = To_char(sysdate, 'yyyy-mm-dd')
 	</select>
 	
 	<select id="getListTwoDaysAgo" resultType="com.albago.domain.ScheduleVO">
 		SELECT *
 		FROM   schedule
-		WHERE  To_char(s_start, 'YYYYMMDD') = To_char(SYSDATE - ( interval '2' day ), 'YYYYMMDD') 
+		<!-- WHERE  To_char(s_start, 'YYYYMMDD') = To_char(SYSDATE - ( interval '2' day ), 'YYYYMMDD') -->
 	</select>
 	
 	<insert id="copyListTwoDaysAgo">

@@ -45,7 +45,7 @@ public class UserInfoController {
 	// 회원가입
 	@GetMapping(value = "/insert/{u_id}/{u_pw}/{u_name}/{u_email:.+}/{u_birth:.+}/{u_gender}/{u_addr}/{u_phone:.+}/{u_position}", produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public int register(@PathVariable("u_id") String u_id, @PathVariable("u_pw") String u_pw,
+	public String register(@PathVariable("u_id") String u_id, @PathVariable("u_pw") String u_pw,
 			@PathVariable("u_name") String u_name, @PathVariable("u_email") String u_email,
 			@PathVariable("u_birth") String u_birth, @PathVariable("u_gender") int u_gender,
 			@PathVariable("u_addr") String u_addr, @PathVariable("u_phone") String u_phone,
@@ -67,8 +67,12 @@ public class UserInfoController {
 
 		log.info(userInfo);
 
-		return userInfoService.register(userInfo); // 정상적으로 db에 insert 된 갯수 반환
-													// 1일 경우 정상, 그 이외엔 비정상
+		if (userInfoService.register(userInfo) == 1) {
+			return userInfo.getU_id();
+		}
+
+		return "0"; // 정상적으로 db에 insert 된 갯수 반환
+					// 1일 경우 정상, 그 이외엔 비정상
 	}
 
 	// 회원가입 시 이메일 인증, URI의 끝에 이메일이 오는 경우 '.com'등으로 인해 확장자로 인식함. 슬래시로 닫아줘야함
