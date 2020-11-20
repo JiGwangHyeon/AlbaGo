@@ -21,6 +21,6 @@ public class NoticeMapperTests {
 	public void testGetList() {
 		log.info("testGetList...................");
 
-		mapper.getList(1234123521).forEach(notice -> log.info(notice));
+		mapper.getList(1234567890).forEach(notice -> log.info(notice));
 	}
 }

@@ -18,7 +18,7 @@ public class CompanyServiceImpl implements CompanyService {
 	private CompanyMapper mapper;
 
 	@Override
-	public String getCompanyName(int c_code) {
+	public String getCompanyName(long c_code) {
 		log.info("getCompanyName..................");
 
 		return mapper.getCompanyName(c_code);

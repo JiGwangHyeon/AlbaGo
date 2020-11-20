@@ -85,5 +85,4 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		return mapper.getId(userInfo);
 	}
-
 }

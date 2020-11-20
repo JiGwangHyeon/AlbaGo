@@ -122,6 +122,18 @@ public class UserInfoController {
 		return userInfoService.get(u_id); // json 데이터 출력
 	}
 
+	// 로그인한 상태의 회원 정보 가져오기
+	@GetMapping(value = "/get/session", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public UserInfoVO sessionGet(HttpServletRequest request) {
+		log.info("session get 호출.......................");
+
+		HttpSession session = request.getSession();
+		String u_id = (String) session.getAttribute("u_id");
+		log.info("u_id : " + u_id);
+
+		return userInfoService.get(u_id); // json 데이터 출력
+	}
+
 	// 회원 이름 가져오기
 	@GetMapping(value = "/getName", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<String> getName(HttpServletRequest request) {

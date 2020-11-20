@@ -14,6 +14,6 @@
 		WHERE  c_code IN (SELECT c_code
 		                  FROM   history
 		                  WHERE  u_id = #{u_id}
-		                         AND h_qdate IS NULL) 
+		                         AND h_qdate IS NULL)
 	</select>
 </mapper>

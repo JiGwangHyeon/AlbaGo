@@ -6,7 +6,7 @@ import com.albago.domain.CompanyVO;
 
 public interface CompanyService {
 
-	public String getCompanyName(int c_code);
+	public String getCompanyName(long c_code);
 
 	public List<CompanyVO> getCompanyListById(String u_id);
 }

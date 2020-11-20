@@ -28,7 +28,7 @@ public class CompanyController {
 	private CompanyService companyService;
 
 	@GetMapping(value = "/getName/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public String getCompanyName(@PathVariable("c_code") int c_code) {
+	public String getCompanyName(@PathVariable("c_code") long c_code) {
 		log.info("getCompanyName 호출......................");
 
 		return companyService.getCompanyName(c_code);

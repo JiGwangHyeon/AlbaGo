@@ -109,6 +109,8 @@
 			WHERE  ( tbl.s_start <= to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end > to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') )
 			        OR ( tbl.s_start < to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end > to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') )
 			        OR ( tbl.s_start > to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss') AND tbl.s_end < to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss') ) 
+			        OR ( trunc(tbl.s_start) = trunc(to_date(#{s_start}, 'yyyy-mm-dd hh24:mi:ss')) )
+			        OR ( trunc(tbl.s_end) = trunc(to_date(#{s_end}, 'yyyy-mm-dd hh24:mi:ss')) )
 		]]>		
 	</select>
 	

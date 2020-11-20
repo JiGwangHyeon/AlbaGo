@@ -18,7 +18,7 @@ public class NoticeServiceImpl implements NoticeService {
 	private NoticeMapper mapper;
 
 	@Override
-	public List<NoticeVO> getList(int c_code) {
+	public List<NoticeVO> getList(long c_code) {
 		log.info("getNoticeList..................");
 
 		return mapper.getList(c_code);
