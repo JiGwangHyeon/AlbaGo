@@ -3,21 +3,26 @@ package com.albago.mapper;
 import com.albago.domain.UserInfoVO;
 
 public interface UserInfoMapper {
-	public int insertUser(UserInfoVO userInfo);
 
-	public UserInfoVO readUser(String u_id);
+	public int insert(UserInfoVO userInfo);
 
-	public int login(UserInfoVO userInfo);
+	public UserInfoVO selectSingle(String u_id);
 
-	public int matchNameEmail(UserInfoVO userInfo);
+	public String selectIdByNameEmail(UserInfoVO userInfo);
 
-	public int matchNameIdEmail(UserInfoVO userInfo);
+	public int getCountById(String u_id);
 
-	public int resetPw(UserInfoVO userInfo);
+	public int getCountByIdPw(UserInfoVO userInfo);
 
-	public int deleteUser(String u_id);
+	public int getCountByNameEmail(UserInfoVO userInfo);
 
-	public int idCheck(String u_id);
+	public int getCountByIdNameEmail(UserInfoVO userInfo);
 
-	public String getId(UserInfoVO userInfo);
+	public int updatePw(UserInfoVO userInfo);
+
+	public int updateAddr(UserInfoVO userInfo);
+
+	public int updatePhone(UserInfoVO userInfo);
+
+	public int delete(String u_id);
 }

@@ -2,7 +2,6 @@ package com.albago.mapper;
 
 import java.util.List;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -51,20 +50,23 @@ public class SalaryMapperTests {
 		log.info("result: " + salaryMapper.getWeeklySumOfBase());
 	}
 
+	/*
+	 * @Test public void testSetWeeklyExtra() {
+	 * log.info("testSetWeeklyExtra...................."); SimpleDateFormat sdf =
+	 * new SimpleDateFormat("yyyyMMdd"); Calendar date = Calendar.getInstance();
+	 * date.set(2020, 5, 9); Calendar now = Calendar.getInstance(); while
+	 * (now.after(date)) { String dateString = sdf.format(date.getTime());
+	 * log.fatal("dateString: " + dateString); List<SalaryVO> list =
+	 * salaryMapper.getWeeklySumOfBase(dateString); log.info("weeklySumOfBase: " +
+	 * list);
+	 * 
+	 * for (SalaryVO sa : list) { sa.setTest(dateString); double we =
+	 * CalcDate.getWeeklyExtra(sa.getSa_base(), sa.getS_code());
+	 * sa.setSa_wextra(we); salaryMapper.setWeeklyExtra(sa); }
+	 * date.add(Calendar.DATE, 7); } }
+	 */
+
 //	@Test
-	public void testSetWeeklyExtra() {
-		log.info("testSetWeeklyExtra....................");
-
-		List<SalaryVO> list = salaryMapper.getWeeklySumOfBase();
-
-		for (SalaryVO sa : list) {
-			double we = CalcDate.getWeeklyExtra(sa.getSa_base(), sa.getS_code());
-			sa.setSa_wextra(we);
-			salaryMapper.setWeeklyExtra(sa);
-		}
-	}
-
-	@Test
 	public void test() {
 		List<ScheduleVO> schedule = scheduleMapper.getListTwoDaysAgo();
 

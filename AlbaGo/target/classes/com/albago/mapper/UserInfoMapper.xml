@@ -6,88 +6,89 @@
 		 FROM   dual) 
 	</sql>
 
-	<insert id="insertUser">
+	<insert id="insert">
 		INSERT INTO userinfo
-		            (
-		                        u_id,
-		                        u_pw,
-		                        u_name,
-		                        u_email,
-		                        u_gender,
-		                        u_birth,
-		                        u_addr,
-		                        u_phone,
-		                        u_position
-		            )
-		            VALUES
-		            (
-		                        #{u_id},
-		                        <include refid="pw_encrypt"></include>,
-		                        #{u_name},
-		                        #{u_email},
-		                        #{u_gender},
-		                        #{u_birth},
-		                        #{u_addr},
-		                        #{u_phone},
-		                        #{u_position}
-		            )
+		            (u_id
+		             , u_pw
+		             , u_name
+		             , u_email
+		             , u_gender
+		             , u_birth
+		             , u_addr
+		             , u_phone
+		             , u_position)
+		     VALUES ( #{u_id}
+		     		  , <include refid="pw_encrypt"></include>
+		              , #{u_name}
+		              , #{u_email}
+		              , #{u_gender}
+		              , #{u_birth}
+		              , #{u_addr}
+		              , #{u_phone}
+		              , #{u_position} ) 
 	</insert>
 
-	<select id="readUser" resultType="com.albago.domain.UserInfoVO">
+	<select id="selectSingle" resultType="com.albago.domain.UserInfoVO">
 		SELECT *
-		FROM   userinfo
-		WHERE  u_id = #{u_id} 
+		  FROM userinfo
+		 WHERE u_id = #{u_id} 
 	</select>
 
-	<select id="login" resultType="int">
+	<select id="selectIdByNameEmail" resultType="String">
+		SELECT u_id
+		  FROM userinfo
+		 WHERE u_name = #{u_name}
+		   AND u_email = #{u_email} 
+	</select>
+
+	<select id="getCountByIdPw" resultType="int">
 		SELECT Count(u_id)
-		FROM   userinfo
-		WHERE  u_id = #{u_id}
-			   AND    u_pw = <include refid="pw_encrypt"></include>
+		  FROM userinfo
+		 WHERE u_id = #{u_id}
+		   AND u_pw = <include refid="pw_encrypt"></include>
 	</select>
 
-	<select id="matchNameEmail" resultType="int">
-			SELECT Count(u_id)
-			FROM   userinfo
-			WHERE  u_name = #{u_name}
-			       AND u_email = #{u_email} 
-	</select>
-
-	<select id="matchNameIdEmail" resultType="int">
+	<select id="getCountByNameEmail" resultType="int">
 		SELECT Count(u_id)
-		FROM   userinfo
-		WHERE  u_name = #{u_name}
-		       AND u_id = #{u_id}
-		       AND u_email = #{u_email} 
+		  FROM userinfo
+		 WHERE u_name = #{u_name}
+		   AND u_email = #{u_email} 
 	</select>
 
-	<update id="resetPw">
+	<select id="getCountByIdNameEmail" resultType="int">
+		SELECT Count(u_id)
+		  FROM userinfo
+		 WHERE u_id = #{u_id}
+		   AND u_name = #{u_name}
+		   AND u_email = #{u_email} 
+	</select>
+
+	<select id="getCountById" resultType="int">
+		SELECT Count(u_id)
+		  FROM userinfo
+		 WHERE u_id = #{u_id} 
+	</select>
+
+	<update id="updatePw">
 		UPDATE userinfo
-		SET    u_pw = <include refid="pw_encrypt"></include>
-		WHERE  u_id = #{u_id}
+		   SET u_pw = <include refid="pw_encrypt"></include>
+		 WHERE u_id = #{u_id}
+	</update>
+	
+	<update id="updateAddr">
+		UPDATE userinfo
+		   SET u_addr = #{u_addr}
+		 WHERE u_id = #{u_id} 
+	</update>
+	
+	<update id="updatePhone">
+		UPDATE userinfo
+		   SET u_phone = #{u_phone}
+		 WHERE u_id = #{u_id} 
 	</update>
 
-	<delete id="deleteUser">
+	<delete id="delete">
 		DELETE userinfo
-		WHERE  u_id = #{u_id} 
+		 WHERE u_id = #{u_id} 
 	</delete>
-
-	<select id="idCheck" resultType="int">
-		SELECT Count(u_id)
-		FROM   userinfo
-		WHERE  u_id = #{u_id} 
-	</select>
-
-	<select id="getId" resultType="String">
-		SELECT u_id
-		FROM   userinfo
-		WHERE  u_name = #{u_name}
-		       AND u_email = #{u_email} 
-	</select>
-
-	<select id="getName" resultType="String">
-		SELECT u_name
-		FROM   userinfo
-		WHERE  u_id = #{u_id}
-	</select>
 </mapper>

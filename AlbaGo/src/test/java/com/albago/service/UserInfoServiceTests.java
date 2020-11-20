@@ -105,10 +105,22 @@ public class UserInfoServiceTests {
 		log.info("deleteUser_result: " + service.deleteUser("testid111"));
 	}
 
-	@Test
+//	@Test
 	public void testIdCheck() {
 		log.info("idCheck......................");
 
 		log.info("idCheck_result: " + (service.idCheck("gkdud0941") == 1 ? "아이디 이미 존재함." : "아이디 사용 가능함."));
+	}
+
+	@Test
+	public void testEditProfile() {
+		log.info("testEditProfile.................");
+
+		UserInfoVO userInfo = new UserInfoVO();
+
+		userInfo.setU_id("kwang2951");
+		userInfo.setU_addr("충북 청주시 청원구 구룡택지로 32, 101호");
+
+		log.info("Result_testEditProfile: " + service.editProfile(userInfo));
 	}
 }

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.albago.domain.ScheduleChangeVO;
 import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
+import com.albago.service.ScheduleChangeService;
 import com.albago.service.ScheduleRepeatService;
 import com.albago.service.ScheduleService;
 import com.albago.util.RepeatSchedule;
@@ -33,6 +35,7 @@ public class ScheduleController {
 
 	private ScheduleService scheduleService;
 	private ScheduleRepeatService scheduleRepeatService;
+	private ScheduleChangeService scheduleChangeService;
 
 	// 해당 직원의 오늘의 근무 일정 조회
 	@GetMapping(value = "/todays/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
@@ -193,6 +196,65 @@ public class ScheduleController {
 		}
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	// *******************근무 변경 신청******************************//
+
+	// 근무 일정 변경 요청
+	@GetMapping(value = "/change/insert/{s_code}/{sc_start}/{sc_end}/{sc_reason}", produces = {
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public int insertScheduleChange(@PathVariable("s_code") int s_code, @PathVariable("sc_start") String sc_start,
+			@PathVariable("sc_end") String sc_end, @PathVariable("sc_reason") String sc_reason) {
+
+		log.info("insertScheduleChange.........................");
+
+		ScheduleChangeVO scheduleChange = new ScheduleChangeVO();
+
+		scheduleChange.setS_code(s_code);
+		scheduleChange.setSc_start(sc_start);
+		scheduleChange.setSc_end(sc_end);
+		scheduleChange.setSc_reason(sc_reason);
+
+		return scheduleChangeService.requestChangeSchedule(scheduleChange);
+	}
+
+	// 근무 일정 변경 요청 내용 변경
+	/*
+	 * @GetMapping(value =
+	 * "/change/modify/{s_code}/{sc_start}/{sc_end}/{sc_reason}", produces = {
+	 * MediaType.APPLICATION_JSON_UTF8_VALUE }) public int
+	 * modifyScheduleChange(@PathVariable("s_code") int
+	 * s_code, @PathVariable("sc_start") String sc_start,
+	 * 
+	 * @PathVariable("sc_end") String sc_end, @PathVariable("sc_reason") String
+	 * sc_reason) {
+	 * 
+	 * log.info("insertScheduleChange.........................");
+	 * 
+	 * ScheduleChangeVO scheduleChange = new ScheduleChangeVO();
+	 * 
+	 * scheduleChange.setS_code(s_code); scheduleChange.setSc_start(sc_start);
+	 * scheduleChange.setSc_end(sc_end); scheduleChange.setSc_reason(sc_reason);
+	 * 
+	 * return scheduleChangeService.modifyRequest(scheduleChange); }
+	 */
+
+	// 근무 일정 변경 요청 내용 조회
+	@GetMapping(value = "/change/get/{s_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ScheduleChangeVO getScheduleChange(@PathVariable("s_code") int s_code) {
+
+		log.info("insertScheduleChange.........................");
+
+		return scheduleChangeService.getRequest(s_code);
+	}
+
+	// 근무 일정 변경 요청 취소
+	@GetMapping(value = "/change/cancel/{s_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public int canselScheduleChange(@PathVariable("s_code") int s_code) {
+
+		log.info("insertScheduleChange.........................");
+
+		return scheduleChangeService.cancelRequest(s_code);
 	}
 
 }

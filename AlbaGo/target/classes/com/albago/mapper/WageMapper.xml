@@ -22,7 +22,7 @@
 	       , w_nextra
 	       , w_oextra
 	       , w_hextra
-	       , To_char(SYSDATE - ( interval '1' month ), 'yyyymm')
+	       , To_char(SYSDATE, 'yyyymm')
 	  FROM ((SELECT c_code
 	                , u_id
 	                , SUM(sa_base)   w_base
@@ -35,7 +35,7 @@
 	                                              , s_code
 	                                         FROM schedule
 	                                        WHERE ( s_start < Trunc(SYSDATE) - ( interval '1' day ) )
-	                                          AND ( s_start >= Trunc(SYSDATE) - ( interval '1' day ) - ( interval '1' month ) )
+	                                          AND ( s_start >= add_months(Trunc(d) - ( interval '1' day ), -1))
 	                                          AND ( c_code IN (SELECT c_code
 	                                                             FROM company
 	                                                            WHERE c_eday = To_char(SYSDATE - ( interval '2' day ), 'dd')) ))
@@ -43,4 +43,17 @@
 	                   , u_id))
 		]]>      
 	</insert> 
+	
+	<select id="getWageList" resultType="com.albago.domain.WageVO">
+		SELECT *
+		  FROM wage
+		 WHERE c_code = #{c_code}
+		   AND u_id = #{u_id} 
+	</select>
+	
+	<select id="getPay" resultType = "int">
+		select p_perhour from pay
+		 WHERE c_code = #{c_code}
+		   AND u_id = #{u_id} 
+	</select>
 </mapper>

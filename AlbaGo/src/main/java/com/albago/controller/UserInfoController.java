@@ -258,6 +258,8 @@ public class UserInfoController {
 		return userInfoService.resetPw(userInfo); // 비밀번호 재설정 결과 반환, 1이면 정상
 	}
 
+	//
+
 	// 계정 삭제
 	@GetMapping(value = "/delete", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<Integer> deleteUser(HttpServletRequest request) {
@@ -271,4 +273,26 @@ public class UserInfoController {
 
 		return new ResponseEntity<>(userInfoService.deleteUser(u_id), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
 	}
+
+	// 개인 정보 변경
+	@GetMapping(value = "/editProfile/{u_pw}/{u_addr}/{u_phone}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> editProfile(@PathVariable("u_pw") String u_pw, @PathVariable("u_addr") String u_addr,
+			@PathVariable("u_phone") String u_phone, HttpServletRequest request) {
+		log.info("editProfile 호출.....................");
+
+		UserInfoVO userInfo = new UserInfoVO();
+
+		HttpSession session = request.getSession();
+		String u_id = (String) session.getAttribute("u_id");
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		userInfo.setU_id(u_id);
+		userInfo.setU_pw(u_pw.trim());
+		userInfo.setU_addr(u_addr.trim());
+		userInfo.setU_phone(u_phone.trim());
+
+		return new ResponseEntity<>(userInfoService.editProfile(userInfo), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+	}
+
 }

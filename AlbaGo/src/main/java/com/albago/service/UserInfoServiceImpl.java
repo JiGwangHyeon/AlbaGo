@@ -19,7 +19,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public int register(UserInfoVO userInfo) {
 		log.info("userInfo_insert............." + userInfo);
 
-		return mapper.insertUser(userInfo);
+		return mapper.insert(userInfo);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("userInfo_get..........." + u_id);
 
-		return mapper.readUser(u_id);
+		return mapper.selectSingle(u_id);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("login.....................");
 
-		return mapper.login(userInfo);
+		return mapper.getCountByIdPw(userInfo);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("beforeFindId.....................");
 
-		return mapper.matchNameEmail(userInfo);
+		return mapper.getCountByNameEmail(userInfo);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("beforeFindPw.....................");
 
-		return mapper.matchNameIdEmail(userInfo);
+		return mapper.getCountByIdNameEmail(userInfo);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("resetPw.....................");
 
-		return mapper.resetPw(userInfo);
+		return mapper.updatePw(userInfo);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("deleteUser.....................");
 
-		return mapper.deleteUser(u_id);
+		return mapper.delete(u_id);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("idCheck........................");
 
-		return mapper.idCheck(u_id);
+		return mapper.getCountById(u_id);
 	}
 
 	@Override
@@ -83,6 +83,23 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		log.info("findId........................");
 
-		return mapper.getId(userInfo);
+		return mapper.selectIdByNameEmail(userInfo);
+	}
+
+	@Override
+	public int editProfile(UserInfoVO userInfo) {
+
+		log.info("editProfile.......................");
+
+		int count = 0;
+
+		if (!userInfo.getU_pw().trim().isEmpty())
+			count += mapper.updatePw(userInfo);
+		if (!userInfo.getU_addr().trim().isEmpty())
+			count += mapper.updateAddr(userInfo);
+		if (!userInfo.getU_phone().trim().isEmpty())
+			count += mapper.updatePhone(userInfo);
+
+		return count;
 	}
 }

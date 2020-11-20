@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.albago.mapper.ScheduleChangeMapper">
+
+	<select id="checkExist" resultType="int">
+		SELECT Count(sc_code)
+		  FROM schedule_change
+		 WHERE sc_stat = 'W' 
+		   AND s_code = #{s_code}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO schedule_change
+		            (sc_code
+		             , s_code
+		             , sc_start
+		             , sc_end
+		             , sc_reason)
+		     VALUES (seq_sc_code.nextval
+		             , #{s_code}
+		             , To_date( #{sc_start}, 'yyyy-mm-dd hh24:mi:ss')
+		             , To_date( #{sc_end}, 'yyyy-mm-dd hh24:mi:ss')
+		             , #{sc_reason}) 
+	</insert>
+	
+<!-- 	<update id="update">
+		UPDATE schedule_change
+		   SET sc_start = To_date( #{sc_start}, 'yyyy-mm-dd hh24:mi:ss')
+		       , sc_end = To_date( #{sc_end}, 'yyyy-mm-dd hh24:mi:ss')
+		       , sc_reason = #{sc_reason}
+		 WHERE s_code = #{s_code} 
+	       AND sc_stat = 'W' 
+	</update> -->
+	
+ 	<delete id="delete">
+		DELETE FROM schedule_change
+		 WHERE s_code = #{s_code} 
+	       AND sc_stat = 'W' 
+	</delete>
+	
+	<select id="select" resultType="com.albago.domain.ScheduleChangeVO">
+		SELECT *
+		  FROM schedule_change
+		 WHERE s_code = #{s_code}
+		       AND sc_stat = 'W' 
+	</select>
+	
+<!-- 	<update id="updateStat">
+		
+	</update> -->
+</mapper>

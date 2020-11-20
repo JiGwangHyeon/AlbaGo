@@ -21,4 +21,6 @@ public interface UserInfoService {
 	public int idCheck(String u_id);
 
 	public String findId(UserInfoVO userInfo);
+
+	public int editProfile(UserInfoVO userInfo);
 }

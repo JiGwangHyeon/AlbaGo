@@ -32,7 +32,7 @@
 			                                                       AND h_position != 'A'
 	                                                       ) )
 			                         AND s_start >= ( Trunc(SYSDATE) - ( interval '8' day ) )
-			                         AND s_start < ( Trunc(SYSDATE) - ( interval '1' day ) )
+			                         AND s_start < ( Trunc(SYSDATE) - ( interval '1' day ) )			                         
 			                 )
 			GROUP  BY c_code,
 			          u_id
