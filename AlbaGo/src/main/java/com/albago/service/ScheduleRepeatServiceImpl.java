@@ -20,8 +20,8 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class ScheduleRepeatServiceImpl implements ScheduleRepeatService {
 
-	private ScheduleRepeatMapper srMapper;
-	private ScheduleMapper sMapper;
+	private ScheduleRepeatMapper scheduleRepeatMapper;
+	private ScheduleMapper scheduleMapper;
 
 	@Override
 	public int insertRepeat(ScheduleRepeatVO scheduleRepeat) {
@@ -37,10 +37,9 @@ public class ScheduleRepeatServiceImpl implements ScheduleRepeatService {
 			return -1;
 		}
 
-		return srMapper.insertRepeat(scheduleRepeat);
+		return scheduleRepeatMapper.insertRepeat(scheduleRepeat);
 	}
 
-	@Override
 	public int checkDuplicateRepeat(ScheduleRepeatVO scheduleRepeat) {
 		log.info("checkDuplicateRepeat........................");
 
@@ -71,7 +70,7 @@ public class ScheduleRepeatServiceImpl implements ScheduleRepeatService {
 			schedule.setC_code(scheduleRepeat.getC_code());
 			schedule.setU_id(scheduleRepeat.getU_id());
 			schedule.setSr_code(Integer.parseInt(i));
-			List<ScheduleVO> list = sMapper.checkDuplicateForRepeat(schedule);
+			List<ScheduleVO> list = scheduleMapper.checkDuplicateForRepeat(schedule);
 			for (ScheduleVO l : list) {
 				Calendar sse = Calendar.getInstance();
 				Calendar see = Calendar.getInstance();
@@ -122,7 +121,7 @@ public class ScheduleRepeatServiceImpl implements ScheduleRepeatService {
 
 		int cntDup = 0;
 
-		List<ScheduleRepeatVO> scheduleRepeatExist = srMapper.getListForCheckDuplicate(scheduleRepeat);
+		List<ScheduleRepeatVO> scheduleRepeatExist = scheduleRepeatMapper.getListForCheckDuplicate(scheduleRepeat);
 
 		for (ScheduleRepeatVO exist : scheduleRepeatExist) {
 			String[] rDayListEx = exist.getSr_repeat().split("");

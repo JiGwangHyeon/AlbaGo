@@ -12,10 +12,6 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class CalcDate {
 
-	// 휴일
-	// 토요일, 일요일, 3/1, 8/15, 10/3, 10/9, 1/1
-	// 음력(12월 말일, 1/1, 2) 음력(4/8), 5/5
-	// 6/6, 음력(8/14, 15, 16) 12/25
 	public static SalaryVO setSalaryVO(SalaryVO salary, ScheduleVO schedule) {
 
 		Calendar[] standardTime = getStandardTime(schedule);
