@@ -5,12 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
-import com.albago.service.ScheduleRepeatService;
 import com.albago.service.ScheduleService;
 
 import lombok.extern.log4j.Log4j;
@@ -19,17 +17,12 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class RepeatSchedule {
 
-	@Autowired
-	private ScheduleService scheduleService;
-	@Autowired
-	private ScheduleRepeatService scheduleRepeatService;
-
 //	@Scheduled(cron = "0 0 0 1 * ?")
 	public void insertMonthly() {
 
 	}
 
-	public int whenInsert(ScheduleRepeatVO scheduleRepeat, ScheduleService schedule) throws ParseException {
+	public static int whenInsert(ScheduleRepeatVO scheduleRepeat, ScheduleService schedule) throws ParseException {
 
 		int sr_code = scheduleRepeat.getSr_code();
 		long c_code = scheduleRepeat.getC_code();
@@ -38,7 +31,7 @@ public class RepeatSchedule {
 		String sr_end = scheduleRepeat.getSr_end();
 		String sr_repeat = scheduleRepeat.getSr_repeat();
 
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		Date time_start = timeFormat.parse(sr_start);
 		System.out.println(time_start);
 		Date time_end = timeFormat.parse(sr_end);
@@ -57,7 +50,7 @@ public class RepeatSchedule {
 
 		int interval = (int) (time_end.getTime() - time_start.getTime());
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		String[] dayArr = getDayArr(sr_repeat);
 
@@ -92,7 +85,7 @@ public class RepeatSchedule {
 				scheduleVo.setS_start(sdf.format(calStart.getTime()));
 				scheduleVo.setS_end(sdf.format(calEnd.getTime()));
 
-				count += schedule.insertSchedule(scheduleVo);
+				count += schedule.applySchedule(scheduleVo);
 			}
 
 			calStart.add(Calendar.DAY_OF_MONTH, 7);
@@ -103,7 +96,7 @@ public class RepeatSchedule {
 				System.out.println("calStart: " + calStart.getTime());
 				System.out.println("calEnd: " + calEnd.getTime());
 
-				count += schedule.insertSchedule(scheduleVo);
+				count += schedule.applySchedule(scheduleVo);
 
 				calStart.add(Calendar.DAY_OF_MONTH, 7);
 				calEnd.add(Calendar.DAY_OF_MONTH, 7);
@@ -112,7 +105,7 @@ public class RepeatSchedule {
 		return count;
 	}
 
-	public String[] getDayArr(String repeat) {
+	public static String[] getDayArr(String repeat) {
 		return repeat == null ? new String[] {} : repeat.split("");
 	}
 

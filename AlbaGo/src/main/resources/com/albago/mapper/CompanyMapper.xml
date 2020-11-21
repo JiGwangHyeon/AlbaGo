@@ -7,6 +7,12 @@
 		FROM   company
 		WHERE  c_code = #{c_code} 
 	</select>
+	
+	<select id="selectSingleByCcode" resultType="com.albago.domain.CompanyVO">
+		SELECT *
+		  FROM company
+		 WHERE c_code = #{c_code} 
+	</select>
 
 	<select id="getCompanyListById" resultType="com.albago.domain.CompanyVO">
 		SELECT *
@@ -15,5 +21,9 @@
 		                  FROM   history
 		                  WHERE  u_id = #{u_id}
 		                         AND h_qdate IS NULL)
+	</select>
+	
+	<select id="getEday" resultType="int">
+		select c_eday from company where c_code = #{c_code}
 	</select>
 </mapper>

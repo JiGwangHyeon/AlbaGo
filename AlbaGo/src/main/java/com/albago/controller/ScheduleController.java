@@ -1,8 +1,6 @@
 package com.albago.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +20,7 @@ import com.albago.domain.ScheduleVO;
 import com.albago.service.ScheduleChangeService;
 import com.albago.service.ScheduleRepeatService;
 import com.albago.service.ScheduleService;
-import com.albago.util.RepeatSchedule;
+import com.albago.util.ForLog;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -37,39 +35,97 @@ public class ScheduleController {
 	private ScheduleRepeatService scheduleRepeatService;
 	private ScheduleChangeService scheduleChangeService;
 
-	// 해당 직원의 오늘의 근무 일정 조회
-	@GetMapping(value = "/todays/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<ScheduleVO> getTodaysScheduleForE(@PathVariable("c_code") long c_code,
-			HttpServletRequest request) {
-		log.info("getTodaysSchedule 호출.........................");
+	// ***********************************Schedule********************************************//
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setC_code(c_code);
+	// 근무 신청
+	@GetMapping(value = "/add/{c_code}/{s_start:.+}/{s_end:.+}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> insertOnce(@PathVariable("c_code") long c_code,
+			@PathVariable("s_start") String s_start, @PathVariable("s_end") String s_end, HttpServletRequest request) {
+
+		log.info("insertOnce 호출" + ForLog.dot);
 
 		HttpSession session = request.getSession();
+
 		String u_id = (String) session.getAttribute("u_id");
+
 		if (u_id == null || u_id.trim().isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setC_code(c_code);
+		schedule.setU_id(u_id);
+		schedule.setS_start(s_start);
+		schedule.setS_end(s_end);
+
+		return new ResponseEntity<>(scheduleService.applySchedule(schedule), HttpStatus.OK);
+	}
+
+	// 해당 직원의 오늘의 근무 일정 조회
+	@GetMapping(value = "/todays/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<ScheduleVO> getTodaysSchedule(@PathVariable("c_code") long c_code,
+			HttpServletRequest request) {
+
+		log.info("getTodaysSchedule 호출" + ForLog.dot);
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
 
-		return new ResponseEntity<>(scheduleService.getTodaysScheduleForE(schedule), HttpStatus.OK);// 오늘의 일정이 담긴 vo 반환
+		return new ResponseEntity<>(scheduleService.getTodaysSchedule(schedule), HttpStatus.OK);// 오늘의 일정이 담긴 vo 반환
+	}
+
+	// s_code로 스케줄 조회
+	@GetMapping(value = "/get/schedule/{s_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<ScheduleVO> getSchedule(@PathVariable("s_code") int s_code, HttpServletRequest request) {
+
+		log.info("getSchedule 호출" + ForLog.dot);
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setS_code(s_code);
+		schedule.setU_id(u_id);
+
+		return new ResponseEntity<>(scheduleService.getScheduleSingle(schedule), HttpStatus.OK);// 오늘의 일정이 담긴 vo 반환
 	}
 
 	// 출근
 	@GetMapping(value = "/arrive/{s_code}/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<Integer> arrive(@PathVariable("s_code") int s_code, @PathVariable("c_code") long c_code,
 			HttpServletRequest request) {
-		log.info("arrive 호출............");
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setS_code(s_code);
-		schedule.setC_code(c_code);
+		log.info("arrive 호출" + ForLog.dot);
+
 		HttpSession session = request.getSession();
+
 		String u_id = (String) session.getAttribute("u_id");
+
 		if (u_id == null || u_id.trim().isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setS_code(s_code);
+		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
 
 		return new ResponseEntity<>(scheduleService.arrive(schedule), HttpStatus.OK);
@@ -80,16 +136,21 @@ public class ScheduleController {
 	@GetMapping(value = "/leave/{s_code}/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<Integer> leave(@PathVariable("s_code") int s_code, @PathVariable("c_code") long c_code,
 			HttpServletRequest request) {
-		log.info("leave 호출............");
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setS_code(s_code);
-		schedule.setC_code(c_code);
+		log.info("leave 호출" + ForLog.dot);
+
 		HttpSession session = request.getSession();
+
 		String u_id = (String) session.getAttribute("u_id");
+
 		if (u_id == null || u_id.trim().isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setS_code(s_code);
+		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
 
 		return new ResponseEntity<>(scheduleService.leave(schedule), HttpStatus.OK);
@@ -99,73 +160,144 @@ public class ScheduleController {
 	@GetMapping(value = "/week/{c_code}/{week}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<List<ScheduleVO>> getWeekScheduleForE(@PathVariable("c_code") long c_code,
 			@PathVariable("week") int week, HttpServletRequest request) {
+
 		log.info("getWeekScheduleForE 호출............");
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setC_code(c_code);
 		HttpSession session = request.getSession();
+
 		String u_id = (String) session.getAttribute("u_id");
 		if (u_id == null || u_id.trim().isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
 
-		Calendar s_start = Calendar.getInstance();
-		if (s_start.get(Calendar.DAY_OF_WEEK) == 1) {
-			s_start.add(Calendar.DATE, -6 + week * 7);
-		} else {
-			s_start.add(Calendar.DATE, -s_start.get(Calendar.DAY_OF_WEEK) + 2 + week * 7);
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		schedule.setS_start(sdf.format(s_start.getTime()));
-
-		return new ResponseEntity<>(scheduleService.getWeekScheduleForE(schedule), HttpStatus.OK);
+		return new ResponseEntity<>(scheduleService.getScheduleWeek(schedule, week), HttpStatus.OK);
 	}
 
 	// 월별 일정 불러오기
 	@GetMapping(value = "/month/{c_code}/{year}/{month}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<List<ScheduleVO>> getMonthScheduleForE(@PathVariable("c_code") long c_code,
 			@PathVariable("year") int year, @PathVariable("month") int month, HttpServletRequest request) {
-		log.info("getMonthScheduleForE 호출............");
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setC_code(c_code);
+		log.info("getMonthScheduleForE 호출" + ForLog.dot);
+
 		HttpSession session = request.getSession();
+
 		String u_id = (String) session.getAttribute("u_id");
+
 		if (u_id == null || u_id.trim().isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setC_code(c_code);
 		schedule.setU_id(u_id);
 
-		Calendar s_start = Calendar.getInstance();
-		s_start.set(Calendar.YEAR, year);
-		s_start.set(Calendar.MONTH, month - 1);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-		schedule.setS_start(sdf.format(s_start.getTime()));
-		return new ResponseEntity<>(scheduleService.getMonthScheduleForE(schedule), HttpStatus.OK);
+		return new ResponseEntity<>(scheduleService.getScheduleMonth(schedule, year, month), HttpStatus.OK);
 	}
 
-	// 일정 한개만 추가
-	@GetMapping(value = "/add/{c_code}/{s_start:.+}/{s_end:.+}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<Integer> insertOnce(@PathVariable("c_code") long c_code,
+	// 근무 신청 내용 수정하기
+	@GetMapping(value = "/editApply/{s_code}/{s_start}/{s_end}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> editAppliedSchedule(@PathVariable("s_code") int s_code,
 			@PathVariable("s_start") String s_start, @PathVariable("s_end") String s_end, HttpServletRequest request) {
-		log.info("insertOnce 호출............");
 
-		ScheduleVO schedule = new ScheduleVO();
-		schedule.setC_code(c_code);
+		log.info("editAppliedSchedule 호출" + ForLog.dot);
+
 		HttpSession session = request.getSession();
+
 		String u_id = (String) session.getAttribute("u_id");
+
 		if (u_id == null || u_id.trim().isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setS_code(s_code);
 		schedule.setU_id(u_id);
 		schedule.setS_start(s_start);
 		schedule.setS_end(s_end);
 
-		return new ResponseEntity<>(scheduleService.insertSchedule(schedule), HttpStatus.OK);
+		return new ResponseEntity<>(scheduleService.editAppliedSchedule(schedule), HttpStatus.OK);
 	}
+
+	// 근무 신청 취소하기
+	@GetMapping(value = "/cancel/{s_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> cancelAppliedSchedule(@PathVariable("s_code") int s_code,
+			HttpServletRequest request) {
+
+		log.info("cancelAppliedSchedule 호출" + ForLog.dot);
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setS_code(s_code);
+		schedule.setU_id(u_id);
+
+		return new ResponseEntity<>(scheduleService.cancelAppliedSchedule(schedule), HttpStatus.OK);
+	}
+
+	// 거절된 스케줄 삭제하기
+	/*
+	 * @GetMapping(value = "/deleteRejected/{c_code}", produces = {
+	 * MediaType.APPLICATION_JSON_UTF8_VALUE }) public ResponseEntity<Integer>
+	 * deleteRejectedSchedule(@PathVariable("c_code") long c_code,
+	 * HttpServletRequest request) {
+	 * 
+	 * log.info("deleteRejectedSchedule 호출" + ForLog.dot);
+	 * 
+	 * HttpSession session = request.getSession();
+	 * 
+	 * String u_id = (String) session.getAttribute("u_id");
+	 * 
+	 * if (u_id == null || u_id.trim().isEmpty()) { return new
+	 * ResponseEntity<>(HttpStatus.UNAUTHORIZED); }
+	 * 
+	 * ScheduleVO schedule = new ScheduleVO();
+	 * 
+	 * schedule.setC_code(c_code); schedule.setU_id(u_id);
+	 * 
+	 * return new ResponseEntity<>(scheduleService.deleteRejectedSchedule(schedule),
+	 * HttpStatus.OK); }
+	 */
+
+	// 거절된 스케줄 목록 가져오기
+	/*
+	 * @GetMapping(value = "/getRejected/{c_code}", produces = {
+	 * MediaType.APPLICATION_JSON_UTF8_VALUE }) public
+	 * ResponseEntity<List<ScheduleVO>> getRejectedSchedule(@PathVariable("c_code")
+	 * long c_code, HttpServletRequest request) {
+	 * 
+	 * log.info("getRejectedSchedule 호출" + ForLog.dot);
+	 * 
+	 * HttpSession session = request.getSession();
+	 * 
+	 * String u_id = (String) session.getAttribute("u_id");
+	 * 
+	 * if (u_id == null || u_id.trim().isEmpty()) { return new
+	 * ResponseEntity<>(HttpStatus.UNAUTHORIZED); }
+	 * 
+	 * ScheduleVO schedule = new ScheduleVO();
+	 * 
+	 * schedule.setC_code(c_code); schedule.setU_id(u_id);
+	 * 
+	 * return new ResponseEntity<>(scheduleService.getRejectedSchedule(schedule),
+	 * HttpStatus.OK); }
+	 */
+
+	// ***********************************ScheduleRepeat********************************************//
 
 	// 일정 매 주 반복 추가
 	@GetMapping(value = "/add/repeat/{c_code}/{repeat}/{start}/{end}", produces = {
@@ -173,29 +305,26 @@ public class ScheduleController {
 	public ResponseEntity<Integer> insertWeeklyRepeat(@PathVariable("c_code") long c_code,
 			@PathVariable("repeat") String repeat, @PathVariable("start") String start, @PathVariable("end") String end,
 			HttpServletRequest request) throws ParseException {
-		log.info("insertWeeklyRepeat 호출............");
+
+		log.info("insertWeeklyRepeat 호출" + ForLog.dot);
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 
 		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
 
 		scheduleRepeat.setC_code(c_code);
-		HttpSession session = request.getSession();
-		String u_id = (String) session.getAttribute("u_id");
-		if (u_id == null || u_id.trim().isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		scheduleRepeat.setU_id(u_id);
 		scheduleRepeat.setSr_start(start);
 		scheduleRepeat.setSr_end(end);
 		scheduleRepeat.setSr_repeat(repeat);
 
-		int result = scheduleRepeatService.insertRepeat(scheduleRepeat);
-
-		if (result == 1) {
-			RepeatSchedule rs = new RepeatSchedule();
-			result = rs.whenInsert(scheduleRepeat, scheduleService);
-		}
-
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return new ResponseEntity<>(scheduleRepeatService.insertRepeat(scheduleRepeat), HttpStatus.OK);
 	}
 
 	// *******************근무 변경 신청******************************//

@@ -8,4 +8,6 @@ public interface WageService {
 
 	public List<WageVO> getWageList(WageVO wage);
 
+	public int getPay(WageVO wage);
+
 }

@@ -45,7 +45,17 @@ public class ScheduleServiceTests {
 		schedule.setU_id("gkdud0941");
 		schedule.setC_code(1234123521);
 
-		log.info("ScheduleVO: " + service.getTodaysScheduleForE(schedule));
+		log.info("ScheduleVO: " + service.getTodaysSchedule(schedule));
+	}
+
+	@Test
+	public void testGetSchedule() {
+		log.info("testGetSchedule........................");
+
+		ScheduleVO schedule = new ScheduleVO();
+		schedule.setS_code(2302);
+
+		log.info("ScheduleVO: " + service.getScheduleSingle(schedule));
 	}
 
 //	@Test
@@ -95,7 +105,7 @@ public class ScheduleServiceTests {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		schedule.setS_start(sdf.format(s_start.getTime()));
 
-		log.info("schedule_getWeekScheduleForE: " + service.getWeekScheduleForE(schedule));
+		log.info("schedule_getWeekScheduleForE: " + service.getScheduleWeek(schedule, week));
 	}
 
 //	@Test
@@ -114,7 +124,7 @@ public class ScheduleServiceTests {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
 		schedule.setS_start(sdf.format(s_start.getTime()));
 
-		log.info("schedule_getMonthScheduleForE: " + service.getMonthScheduleForE(schedule));
+		log.info("schedule_getMonthScheduleForE: " + service.getScheduleMonth(schedule, year, month));
 
 	}
 
@@ -128,11 +138,11 @@ public class ScheduleServiceTests {
 		schedule.setS_start("2020-11-18 09:00:00");
 		schedule.setS_end("2020-11-18 18:00:00");
 
-		log.info("schedule_getMonthScheduleForE: " + service.insertSchedule(schedule));
+		log.info("schedule_getMonthScheduleForE: " + service.applySchedule(schedule));
 
 	}
 
-	@Test
+//	@Test
 	public void testDummy() {
 
 		List<HistoryVO> list = mapper.makeDummy();

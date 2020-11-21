@@ -31,7 +31,7 @@ public class CalcDate {
 		Calendar arrive = Calendar.getInstance();
 		Calendar leave = Calendar.getInstance();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		try {
 			start.setTime(sdf.parse(schedule.getS_start()));

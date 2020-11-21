@@ -6,23 +6,36 @@ import com.albago.domain.ScheduleVO;
 
 public interface ScheduleMapper {
 
-	public ScheduleVO getTodaysScheduleForE(ScheduleVO schedule);
+	public int insert(ScheduleVO schedule); // 근무 신청
 
-	public int arrive(ScheduleVO schedule);
+	public int updateStartEnd(ScheduleVO schedule); // 근무 신청 내역 수정
 
-	public int leave(ScheduleVO schedule);
+	public int updateArrive(ScheduleVO schedule); // arrive 수정
 
-	public List<ScheduleVO> getWeekScheduleForE(ScheduleVO schedule);
+	public int updateLeave(ScheduleVO schedule); // leave 수정
 
-	public List<ScheduleVO> getMonthScheduleForE(ScheduleVO schedule);
+	public int updateStatToD(ScheduleVO schedule); // 스탯을 D로 변경
 
-	public int insertSchedule(ScheduleVO schedule);
+	public int deleteByScodeStatIsR(ScheduleVO schedule); // 한 건 삭제
 
-	public List<ScheduleVO> getListTwoDaysAgo();
+//	public int deleteByCcodeStatIsR(ScheduleVO schedule); // 스탯이 R인 건 삭제
 
-	public List<ScheduleVO> getListByCompany(long c_code);
+	public int getCountDuplicated(ScheduleVO schedule); // 근무 신청 전 겹치는 일정 확인
 
-	public int checkDuplicate(ScheduleVO schedule);
+	public ScheduleVO selectSingleByScode(ScheduleVO schedule); // 주어진 scode로 조회
 
-	public List<ScheduleVO> checkDuplicateForRepeat(ScheduleVO schedule);
+	public ScheduleVO selectSingleByCcodeIdToday(ScheduleVO schedule); // 오늘에 해당하는 건 조회
+
+	public List<ScheduleVO> selectMultiByStartIsTwoDayAgo(); // 이틀 전 근무 목록 조회
+
+//	public List<ScheduleVO> selectMultiByCcodeIdStatIsR(ScheduleVO schedule); // 스탯이 R인 건 조회
+
+	public List<ScheduleVO> selectMultiByCcodeIdWeek(ScheduleVO schedule); // 주 별 목록 조회
+
+	public List<ScheduleVO> selectMultiByCcodeIdMonth(ScheduleVO schedule); // 월 별 목록 조회
+
+	public List<ScheduleVO> selectMultiByCcodeIdStart(ScheduleVO schedule); // 근무 반복 삽입 시 기존의 schedule과 겹칠지 확인하기 위해 리스트
+																			// 요청
+
+	public List<ScheduleVO> selectMultiForExpect(ScheduleVO schedule);
 }

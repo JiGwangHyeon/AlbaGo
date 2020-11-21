@@ -6,7 +6,7 @@ import com.albago.domain.ScheduleRepeatVO;
 
 public interface ScheduleRepeatMapper {
 
-	public int insertRepeat(ScheduleRepeatVO scheduleRepeat);
+	public int insert(ScheduleRepeatVO scheduleRepeat);
 
 	public List<ScheduleRepeatVO> getListForCheckDuplicate(ScheduleRepeatVO scheduleRepeat);
 }

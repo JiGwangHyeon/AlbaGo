@@ -9,4 +9,6 @@ public interface CompanyService {
 	public String getCompanyName(long c_code);
 
 	public List<CompanyVO> getCompanyListById(String u_id);
+
+	public CompanyVO getCompany(long c_code);
 }

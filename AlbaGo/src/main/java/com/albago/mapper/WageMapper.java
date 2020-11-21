@@ -10,4 +10,6 @@ public interface WageMapper {
 	public List<WageVO> getWageList(WageVO wage);
 
 	public int getPay(WageVO wage);
+
+	public int selectSingle(WageVO wage);
 }

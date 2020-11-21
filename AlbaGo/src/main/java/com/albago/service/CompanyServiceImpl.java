@@ -31,4 +31,11 @@ public class CompanyServiceImpl implements CompanyService {
 		return mapper.getCompanyListById(u_id);
 	}
 
+	@Override
+	public CompanyVO getCompany(long c_code) {
+		log.info("getCompany");
+
+		return mapper.selectSingleByCcode(c_code);
+	}
+
 }

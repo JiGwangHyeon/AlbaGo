@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.albago.domain.ScheduleVO;
 import com.albago.domain.WageVO;
+import com.albago.service.SalaryService;
 import com.albago.service.WageService;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +27,8 @@ import lombok.extern.log4j.Log4j;
 @RequestMapping("/salary")
 public class SalaryController {
 
-	private WageService service;
+	private WageService wageService;
+	private SalaryService salaryService;
 
 	@GetMapping(value = "/getList/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<List<WageVO>> getWageList(@PathVariable("c_code") long c_code, HttpServletRequest request) {
@@ -41,7 +44,49 @@ public class SalaryController {
 		wage.setU_id(u_id);
 		wage.setC_code(c_code);
 
-		return new ResponseEntity<>(service.getWageList(wage), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+		return new ResponseEntity<>(wageService.getWageList(wage), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+	}
+
+	@GetMapping(value = "/getPerHour/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> getPay(@PathVariable("c_code") long c_code, HttpServletRequest request) {
+
+		log.info("getWageList 호출.....................");
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		WageVO wage = new WageVO();
+
+		wage.setU_id(u_id);
+		wage.setC_code(c_code);
+
+		return new ResponseEntity<>(wageService.getPay(wage), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+	}
+
+	@GetMapping(value = "/getExpected/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<WageVO> getExpected(@PathVariable("c_code") long c_code, HttpServletRequest request) {
+
+		log.info("getWageList 호출.....................");
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		ScheduleVO schedule = new ScheduleVO();
+
+		schedule.setU_id(u_id);
+		schedule.setC_code(c_code);
+
+		return new ResponseEntity<>(salaryService.getExpectedWage(schedule), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
 	}
 
 }

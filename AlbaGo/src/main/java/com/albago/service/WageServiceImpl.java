@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.albago.domain.WageVO;
 import com.albago.mapper.WageMapper;
 
-import jdk.internal.jline.internal.Log;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
@@ -25,21 +24,26 @@ public class WageServiceImpl implements WageService {
 		List<WageVO> list = mapper.getWageList(wage);
 
 		for (WageVO wageVO : list) {
-			int ph = mapper.getPay(wage);
-
-			wageVO.setW_base(wageVO.getW_base() * ph);
-			wageVO.setW_wextra(wageVO.getW_wextra() * ph);
-			wageVO.setW_nextra(wageVO.getW_nextra() * ph * 0.5);
-			wageVO.setW_oextra(wageVO.getW_oextra() * ph * 0.5);
-			wageVO.setW_hextra(wageVO.getW_hextra() * ph * 0.5);
+			wageVO.setW_base(wageVO.getW_base());
+			wageVO.setW_wextra(wageVO.getW_wextra());
+			wageVO.setW_nextra(wageVO.getW_nextra());
+			wageVO.setW_oextra(wageVO.getW_oextra());
+			wageVO.setW_hextra(wageVO.getW_hextra());
 		}
 
 		return list;
 	}
 
+	@Override
+	public int getPay(WageVO wage) {
+		log.info("getPay.....");
+
+		return mapper.getPay(wage);
+	}
+
 //	@Scheduled()
 	public int convertSalaryToWage() {
-		Log.info("insertMonthly..................");
+		log.info("insertMonthly..................");
 
 		return 0;
 	}

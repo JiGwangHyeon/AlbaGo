@@ -46,4 +46,11 @@ public class CompanyController {
 
 		return new ResponseEntity<>(companyService.getCompanyListById(u_id), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
 	}
+
+	@GetMapping(value = "/getCompany/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<CompanyVO> getCompany(@PathVariable("c_code") long c_code, HttpServletRequest request) {
+		log.info("getCompany 호출......................");
+
+		return new ResponseEntity<>(companyService.getCompany(c_code), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+	}
 }

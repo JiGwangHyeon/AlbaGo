@@ -6,7 +6,7 @@
 	<appender name="console" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p(%d{HH:mm:ss.SSS}): %c - %m%n" />
+			<param name="ConversionPattern" value="\n%-5p(%d{HH:mm:ss.SSS}): %c\n\n - %m%n" />
 		</layout>
 	</appender>
 	
@@ -45,6 +45,18 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
+
+	<logger name="org.springframework.jdbc">
+		<level value="info" />
+	</logger>
+	
+	<!-- SQL Logger -->
+
+	<logger name="jdbc.sqlonly" additivity="false"> 
+		<level value="info"/> 
+		<appender-ref ref="console" />
+	</logger>
+	
 
 	<!-- Root Logger -->
 	<root>
