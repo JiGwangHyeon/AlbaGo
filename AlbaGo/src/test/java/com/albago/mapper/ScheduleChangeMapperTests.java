@@ -36,7 +36,7 @@ public class ScheduleChangeMapperTests {
 	public void testCheckExist() {
 		log.info("testCheckExist.......................");
 
-		log.info("Result_testCheckExist: " + mapper.checkExist(2022));
+		log.info("Result_testCheckExist: " + mapper.getCountByScodeStatIsW(2022));
 	}
 
 //	@Test

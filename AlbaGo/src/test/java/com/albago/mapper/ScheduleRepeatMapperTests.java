@@ -36,7 +36,7 @@ public class ScheduleRepeatMapperTests {
 		scheduleRepeat.setSr_end("18:00:00");
 		scheduleRepeat.setSr_repeat("0134");
 
-		log.info("testInsert_result: " + mapper.insertRepeat(scheduleRepeat));
+		log.info("testInsert_result: " + mapper.applyRepeatedSchedule(scheduleRepeat));
 		log.info("sr_code: " + scheduleRepeat.getSr_code());
 	}
 

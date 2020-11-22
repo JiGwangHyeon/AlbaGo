@@ -15,14 +15,14 @@ import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
 import com.albago.mapper.ScheduleMapper;
 import com.albago.mapper.ScheduleRepeatMapper;
-import com.albago.service.ScheduleRepeatService;
+import com.albago.service.ScheduleService;
 
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 public class Schedule {
 
-	private ScheduleRepeatService scheduleRepeatService;
+	private ScheduleService scheduleService;
 
 	private ScheduleRepeatMapper scheduleRepeatMapper;
 	private ScheduleMapper scheduleMapper;
@@ -46,7 +46,7 @@ public class Schedule {
 		scheduleRepeat.setSr_repeat(repeat);
 
 		// schedule_repeat테이블에 값 insert
-		scheduleRepeatService.insertRepeat(scheduleRepeat);
+		scheduleService.applyRepeatedSchedule(scheduleRepeat);
 	}
 
 	// serviceImpl에 들어갈 override method
@@ -166,11 +166,11 @@ public class Schedule {
 
 		int cntDup = 0; // 겹치는 scheduleRepeat 개수 담을 변수 선언
 
-		List<ScheduleRepeatVO> scheduleRepeatExist = scheduleRepeatMapper.getListForCheckDuplicate(scheduleRepeat); // 비교할
-																													// 기존
-																													// scheduleRepeat
-																													// List<ScheduleRepeatVO>로
-																													// 불러옴
+		List<ScheduleRepeatVO> scheduleRepeatExist = scheduleRepeatMapper.getCountDuplicated(scheduleRepeat); // 비교할
+																												// 기존
+																												// scheduleRepeat
+																												// List<ScheduleRepeatVO>로
+																												// 불러옴
 
 		for (ScheduleRepeatVO exist : scheduleRepeatExist) { // 리스트 for문으로 하나씩 탐색
 

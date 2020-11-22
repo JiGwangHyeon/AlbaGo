@@ -155,7 +155,7 @@ public class ScheduleServiceTests {
 			scheduleRepeat.setSr_end("08:00:00");
 			scheduleRepeat.setSr_repeat("56");
 
-			int result = scheduleRepeatService.insertRepeat(scheduleRepeat);
+			int result = scheduleRepeatService.applyRepeatedSchedule(scheduleRepeat);
 
 			if (result == 1) {
 				RepeatSchedule rs = new RepeatSchedule();

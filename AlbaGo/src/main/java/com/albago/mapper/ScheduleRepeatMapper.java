@@ -8,5 +8,5 @@ public interface ScheduleRepeatMapper {
 
 	public int insert(ScheduleRepeatVO scheduleRepeat);
 
-	public List<ScheduleRepeatVO> getListForCheckDuplicate(ScheduleRepeatVO scheduleRepeat);
+	public List<ScheduleRepeatVO> getCountDuplicated(ScheduleRepeatVO scheduleRepeat);
 }

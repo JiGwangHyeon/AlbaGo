@@ -31,7 +31,7 @@ public class ScheduleRepeatServiceTests {
 		scheduleRepeat.setSr_end("18:00:00");
 		scheduleRepeat.setSr_repeat("034");
 
-		log.info("testInsert_result: " + service.insertRepeat(scheduleRepeat));
+		log.info("testInsert_result: " + service.applyRepeatedSchedule(scheduleRepeat));
 		log.info("sr_code: " + scheduleRepeat.getSr_code());
 	}
 

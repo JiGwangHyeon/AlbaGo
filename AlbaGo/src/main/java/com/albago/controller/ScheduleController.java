@@ -1,6 +1,5 @@
 package com.albago.controller;
 
-import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.albago.domain.ScheduleChangeVO;
 import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
-import com.albago.service.ScheduleChangeService;
-import com.albago.service.ScheduleRepeatService;
 import com.albago.service.ScheduleService;
 import com.albago.util.ForLog;
 
@@ -32,8 +29,6 @@ import lombok.extern.log4j.Log4j;
 public class ScheduleController {
 
 	private ScheduleService scheduleService;
-	private ScheduleRepeatService scheduleRepeatService;
-	private ScheduleChangeService scheduleChangeService;
 
 	// ***********************************Schedule********************************************//
 
@@ -304,7 +299,7 @@ public class ScheduleController {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<Integer> insertWeeklyRepeat(@PathVariable("c_code") long c_code,
 			@PathVariable("repeat") String repeat, @PathVariable("start") String start, @PathVariable("end") String end,
-			HttpServletRequest request) throws ParseException {
+			HttpServletRequest request) {
 
 		log.info("insertWeeklyRepeat 호출" + ForLog.dot);
 
@@ -324,7 +319,7 @@ public class ScheduleController {
 		scheduleRepeat.setSr_end(end);
 		scheduleRepeat.setSr_repeat(repeat);
 
-		return new ResponseEntity<>(scheduleRepeatService.insertRepeat(scheduleRepeat), HttpStatus.OK);
+		return new ResponseEntity<>(scheduleService.applyRepeatedSchedule(scheduleRepeat), HttpStatus.OK);
 	}
 
 	// *******************근무 변경 신청******************************//
@@ -344,7 +339,7 @@ public class ScheduleController {
 		scheduleChange.setSc_end(sc_end);
 		scheduleChange.setSc_reason(sc_reason);
 
-		return scheduleChangeService.requestChangeSchedule(scheduleChange);
+		return scheduleService.applyChangeSchedule(scheduleChange);
 	}
 
 	// 근무 일정 변경 요청 내용 변경
@@ -374,16 +369,18 @@ public class ScheduleController {
 
 		log.info("insertScheduleChange.........................");
 
-		return scheduleChangeService.getRequest(s_code);
+		return scheduleService.getApplySingle(s_code);
 	}
 
 	// 근무 일정 변경 요청 취소
-	@GetMapping(value = "/change/cancel/{s_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public int canselScheduleChange(@PathVariable("s_code") int s_code) {
-
-		log.info("insertScheduleChange.........................");
-
-		return scheduleChangeService.cancelRequest(s_code);
-	}
+	/*
+	 * @GetMapping(value = "/change/cancel/{s_code}", produces = {
+	 * MediaType.APPLICATION_JSON_UTF8_VALUE }) public int
+	 * canselScheduleChange(@PathVariable("s_code") int s_code) {
+	 * 
+	 * log.info("insertScheduleChange.........................");
+	 * 
+	 * return scheduleService.cancelRequest(s_code); }
+	 */
 
 }

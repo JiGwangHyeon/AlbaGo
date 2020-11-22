@@ -9,15 +9,15 @@ import com.albago.domain.ScheduleChangeVO;
 
 public interface ScheduleChangeMapper {
 
-	public int checkExist(int s_code);
-
 	public int insert(ScheduleChangeVO scheduleChange);
-
-//	public int update(ScheduleChangeVO scheduleChange);
 
 	public int delete(int s_code);
 
 	public ScheduleChangeVO select(int s_code);
+
+	public int getCountByScodeStatIsW(int s_code);
+
+//	public int update(ScheduleChangeVO scheduleChange);
 
 //	public int updateStat(ScheduleChangeVO scheduleChange);
 }
