@@ -20,4 +20,10 @@
 		select c_code, u_id from history where h_position='E' and to_char(h_rdate,'yyyymmdd') ='20200701'
 	</select>
 	
+	<select id="getPay" resultType = "int">
+		select p_perhour from pay
+		 WHERE c_code = #{c_code}
+		   AND u_id = #{u_id} 
+	</select>
+	
 </mapper>

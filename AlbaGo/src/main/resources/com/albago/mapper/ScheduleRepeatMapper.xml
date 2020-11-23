@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.ScheduleRepeatMapper">
 
+	<!-- 직원 - 반복근무 신청 -->
+	
+	<select id="getCountDuplicated" resultType="com.albago.domain.ScheduleRepeatVO">
+		SELECT sr_code
+		       , sr_repeat
+		       , sr_start
+		       , sr_end
+		  FROM schedule_repeat
+		 WHERE u_id = #{u_id}
+		   AND c_code = #{c_code} 
+	</select>
+
 	<insert id="insert" parameterType="com.albago.domain.ScheduleRepeatVO">
 		<selectKey resultType="int" keyProperty="sr_code" order="BEFORE">
 			SELECT seq_sr_code.nextval
@@ -19,17 +31,85 @@
 		              , #{u_id}
 		              , To_date( #{sr_start}, 'HH24:MI')
 		              , To_date( #{sr_end}, 'HH24:MI')
-		              , # {sr_repeat}) 
+		              , #{sr_repeat}) 
 	</insert>
 	
-	<select id="getCountDuplicated" resultType="com.albago.domain.ScheduleRepeatVO">
-		SELECT sr_code
-		       , sr_repeat
-		       , sr_start
-		       , sr_end
+	<select id="selectSingleBySrcode" resultType="com.albago.domain.ScheduleRepeatVO">
+		SELECT *
 		  FROM schedule_repeat
-		 WHERE u_id = #{u_id}
-		   AND c_code = #{c_code} 
+		 WHERE sr_code = #{sr_code} 
+		   AND u_id = #{u_id}
 	</select>
+	
+	<update id="updateStartEndRepeat">
+		UPDATE schedule_repeat
+		   SET sr_start = #{sr_start}
+		       , sr_end = #{sr_end}
+		       , sr_repeat = #{sr_repeat}
+		 WHERE sr_code = #{sr_code} 
+	</update>
+	
+	<delete id="deleteBySrcodeStatIsW">
+		DELETE FROM schedule_repeat
+		 WHERE sr_code = #{sr_code}
+		   AND u_id = #{u_id}
+		   AND sr_stat = 'W'
+	</delete>
+	
+	<!-- 직원 - 반복근무 삭제 -->
+	
+	<update id="updateStatToD">
+		UPDATE schedule_repeat
+		   SET sr_stat = 'D'
+		 WHERE u_id = #{u_id}
+		   AND sr_code = #{sr_code} 		
+	</update>
+	
+	<update id="updateStatToP">
+		UPDATE schedule_repeat
+		   SET sr_stat = 'P'
+		 WHERE u_id = #{u_id}
+		   AND sr_code = #{sr_code} 		
+	</update>
+	
+	<!-- 관리자 - 반복근무 신청 -->
+	
+	<select id="selectMultiByCcodeStatIsW" resultType="com.albago.domain.ScheduleRepeatVO">
+		SELECT *
+		  FROM schedule_repeat
+		 WHERE c_code = # {c_code}
+		   AND sr_stat = 'W' 
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM schedule_repeat
+		 WHERE sr_code = # {sr_code} 
+	</delete>
+	
+	<update id="updateStatToPAndReturn">
+		UPDATE schedule_repeat
+		   SET sr_stat = 'P'
+		 WHERE sr_code = #{sr_code}
+	</update>
+	
+	<select id="select" resultType="com.albago.domain.ScheduleRepeatVO">
+		SELECT *
+		  FROM schedule_repeat
+		 WHERE sr_code = #{sr_code}
+	</select>
+	
+	<!-- 관리자 - 반복근무 취소 신청 -->
+	
+	<select id="selectMultiByCcodeStatIsD" resultType="com.albago.domain.ScheduleRepeatVO">
+		SELECT *
+		  FROM schedule_repeat
+		 WHERE c_code = # {c_code}
+		   AND sr_stat = 'D' 
+	</select>
+	
+	<delete id="deleteBySrcode">
+		DELETE FROM schedule_repeat
+		 WHERE sr_code = sr_code 
+	</delete>
 
 </mapper>

@@ -2,16 +2,20 @@ package com.albago.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.albago.domain.ScheduleChangeVO;
+import com.albago.domain.ScheduleRepeatChangeVO;
 import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
 import com.albago.mapper.ScheduleChangeMapper;
 import com.albago.mapper.ScheduleMapper;
+import com.albago.mapper.ScheduleRepeatChangeMapper;
 import com.albago.mapper.ScheduleRepeatMapper;
 import com.albago.util.ForLog;
 
@@ -26,6 +30,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private ScheduleMapper scheduleMapper;
 	private ScheduleRepeatMapper scheduleRepeatMapper;
 	private ScheduleChangeMapper scheduleChangeMapper;
+	private ScheduleRepeatChangeMapper scheduleRepeatChangeMapper;
+
+	// ***********************Schedule 기본 기능**************************//
 
 	// 오늘의 일정 가져오기
 	@Override
@@ -112,6 +119,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return scheduleMapper.selectMultiByCcodeIdMonth(schedule);
 	}
 
+	// ***********************/직원/근무 일정 신청 및 조회**************************//
+
 	// 근무 신청하기
 	@Override
 	public int applySchedule(ScheduleVO schedule) {
@@ -126,7 +135,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return scheduleMapper.insert(schedule);
 	}
 
-//////////////////////////////////////////////////////////////
 	// 근무 신청 내용 수정하기
 	@Override
 	public int editAppliedSchedule(ScheduleVO schedule) {
@@ -144,8 +152,321 @@ public class ScheduleServiceImpl implements ScheduleService {
 		log.info("cancelSchedule" + ForLog.dot);
 		log.info("schedule :" + schedule.toString());
 
-		return scheduleMapper.deleteByScodeStatIsR(schedule);
+		return scheduleMapper.deleteByScodeStatIsW(schedule);
 	}
+
+	// ***********************/직원/근무 일정 반복 신청 및 조회**************************//
+
+	@Override
+	public int applyRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
+		log.info("applyRepeatedSchedule" + ForLog.dot);
+
+		int dupCheck = checkDuplicateRepeat(scheduleRepeat);
+
+		if (dupCheck == 1) {
+			log.info("Duplicated Schedule_Repeat Exist" + ForLog.dot);
+			return 0;
+		} else if (dupCheck == -1) {
+			log.info("Duplicated Schedule Exist" + ForLog.dot);
+			return -1;
+		}
+
+		int result = scheduleRepeatMapper.insert(scheduleRepeat);
+
+		/*
+		 * 관리자가 실행해야 할 부분 if (result == 1) { whenInsert(scheduleRepeat); }
+		 */
+		return result;
+	}
+
+	@Override
+	public ScheduleRepeatVO lookUpAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
+
+		log.info("lookUpAppliedRepeatedSchedule" + ForLog.dot);
+		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		return scheduleRepeatMapper.selectSingleBySrcode(scheduleRepeat);
+	}
+
+	@Override
+	public int editAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
+
+		log.info("editAppliedRepeateSchedule" + ForLog.dot);
+		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		int dupCheck = checkDuplicateRepeat(scheduleRepeat);
+
+		if (dupCheck == 1) {
+			log.info("Duplicated Schedule_Repeat Exist" + ForLog.dot);
+			return 0;
+		} else if (dupCheck == -1) {
+			log.info("Duplicated Schedule Exist" + ForLog.dot);
+			return -1;
+		}
+
+		return scheduleRepeatMapper.updateStartEndRepeat(scheduleRepeat);
+	}
+
+	@Override
+	public int cancelAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
+
+		log.info("cancelAppliedRepeateSchedule" + ForLog.dot);
+		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		return scheduleRepeatMapper.deleteBySrcodeStatIsW(scheduleRepeat);
+	}
+
+	// ***********************/직원/근무 변경 신청**************************//
+
+	@Override
+	public int applyScheduleChange(ScheduleChangeVO scheduleChange) {
+
+		log.info("applyScheduleChange" + ForLog.dot);
+		log.info("scheduleChange: " + scheduleChange.toString());
+
+		if (scheduleChangeMapper.getCountByScodeStatIsW(scheduleChange.getS_code()) == 0) {
+			return scheduleChangeMapper.insert(scheduleChange);
+		}
+
+		return 0;
+	}
+
+	@Override
+	public int editScheduleChange(ScheduleChangeVO scheduleChange) {
+
+		log.info("editScheduleChange" + ForLog.dot);
+		log.info("scheduleChange: " + scheduleChange.toString());
+
+		return scheduleChangeMapper.updateStartEndReason(scheduleChange);
+	}
+
+	@Override
+	public ScheduleChangeVO lookUpAppliedScheduleChange(int s_code) {
+
+		log.info("lookUpAppliedScheduleChange" + ForLog.dot);
+		log.info("s_code: " + s_code);
+
+		return scheduleChangeMapper.selectSingleByScodeStatIsW(s_code);
+	}
+
+	@Override
+	public int cancelScheduleChange(int s_code) {
+
+		log.info("cancelScheduleChange" + ForLog.dot);
+		log.info("s_code: " + s_code);
+
+		return scheduleChangeMapper.deleteByScodeStatIsW(s_code);
+	}
+
+	// ***********************/직원/근무 일정 반복 변경 신청**************************//
+
+	@Override
+	public int applyRepeatedScheduleChange(ScheduleRepeatChangeVO scheduleRepeatChange, String u_id, long c_code) {
+
+		log.info("applyRepeatedScheduleChange" + ForLog.dot);
+		log.info("scheduleRepeatChange: " + scheduleRepeatChange.toString());
+		log.info("u_id: " + u_id);
+		log.info("c_code: " + c_code);
+
+		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
+
+		scheduleRepeat.setU_id(u_id);
+		scheduleRepeat.setC_code(c_code);
+		scheduleRepeat.setSr_start(scheduleRepeatChange.getSrc_start());
+		scheduleRepeat.setSr_end(scheduleRepeatChange.getSrc_end());
+		scheduleRepeat.setSr_repeat(scheduleRepeatChange.getSrc_repeat());
+
+		int dupCheck = checkDuplicateRepeat(scheduleRepeat);
+
+		if (dupCheck == 1) {
+			log.info("Duplicated Schedule_Repeat Exist" + ForLog.dot);
+			return 0;
+		} else if (dupCheck == -1) {
+			log.info("Duplicated Schedule Exist" + ForLog.dot);
+			return -1;
+		}
+
+		return scheduleRepeatChangeMapper.insert(scheduleRepeatChange);
+	}
+
+	@Override
+	public int editRepeatedScheduleChange(ScheduleRepeatChangeVO scheduleRepeatChange, String u_id, long c_code) {
+
+		log.info("editRepeatedScheduleChange" + ForLog.dot);
+		log.info("scheduleRepeatChange: " + scheduleRepeatChange.toString());
+		log.info("u_id: " + u_id);
+		log.info("c_code: " + c_code);
+
+		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
+
+		scheduleRepeat.setU_id(u_id);
+		scheduleRepeat.setC_code(c_code);
+		scheduleRepeat.setSr_start(scheduleRepeatChange.getSrc_start());
+		scheduleRepeat.setSr_end(scheduleRepeatChange.getSrc_end());
+		scheduleRepeat.setSr_repeat(scheduleRepeatChange.getSrc_repeat());
+
+		int dupCheck = checkDuplicateRepeat(scheduleRepeat);
+
+		if (dupCheck == 1) {
+			log.info("Duplicated Schedule_Repeat Exist" + ForLog.dot);
+			return 0;
+		} else if (dupCheck == -1) {
+			log.info("Duplicated Schedule Exist" + ForLog.dot);
+			return -1;
+		}
+
+		return scheduleRepeatChangeMapper.updateStartEndRepeatReason(scheduleRepeatChange);
+	}
+
+	@Override
+	public ScheduleRepeatChangeVO lookupRepeatedScheduleChange(int sr_code) {
+
+		log.info("lookupRepeatedScheduleChange" + ForLog.dot);
+		log.info("sr_code: " + sr_code);
+
+		return scheduleRepeatChangeMapper.selectSingleBySrcodeStatIsW(sr_code);
+	}
+
+	@Override
+	public int cancelRepeatedScheduleChange(int sr_code) {
+
+		log.info("cancelRepeatedScheduleChange" + ForLog.dot);
+		log.info("sr_code: " + sr_code);
+
+		return scheduleRepeatChangeMapper.deleteBySrcodeStatIsW(sr_code);
+	}
+
+	// ***********************/직원/근무 삭제 신청**************************//
+
+	@Override
+	public int applyToCancelSchedule(ScheduleVO schedule) {
+
+		log.info("applyToCancelSchedule" + ForLog.dot);
+		log.info("schedule: " + schedule.toString());
+
+		return scheduleMapper.updateStatToD(schedule);
+	}
+
+	@Override
+	public int cancelToCancelSchedule(ScheduleVO schedule) {
+
+		log.info("cancelToCancelSchedule" + ForLog.dot);
+		log.info("schedule: " + schedule.toString());
+
+		return scheduleMapper.updateStatToP(schedule);
+	}
+
+	// ***********************/직원/반복근무 삭제 신청**************************//
+
+	@Override
+	public int applyToCancelRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
+
+		log.info("applyToCancelRepeatedSchedule" + ForLog.dot);
+		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		return scheduleRepeatMapper.updateStatToD(scheduleRepeat);
+	}
+
+	@Override
+	public int cancelToCancelRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
+
+		log.info("cancelToCancelRepeatedSchedule" + ForLog.dot);
+		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		return scheduleRepeatMapper.updateStatToP(scheduleRepeat);
+	}
+
+	// ***********************/관리자/근무 일정 신청 조회/승인/거절**************************//
+
+	public List<ScheduleVO> getListAppliedSchedule(long c_code) { // 상태가 신청중 인 신청 목록 조회
+
+		log.info("getListAppliedSchedule");
+		log.info("c_code: " + c_code);
+
+		return scheduleMapper.selectMultiByCcodeStatIsW(c_code);
+	}
+
+	public int rejectAppliedSchedule(int s_code) { // 근무 신청 거절
+
+		log.info("rejectAppliedSchedule");
+		log.info("s_code: " + s_code);
+
+		// firebase push
+		// 여기에 푸시 알림 넣어줘야함. "근무 신청이 거절되었습니다"
+
+		return scheduleMapper.delete(s_code);
+	}
+
+	/*
+	 * public int permitAppliedSchedule(int s_code) { // 근무 신청 승인
+	 * 
+	 * log.info("permitAppliedSchedule"); log.info("s_code: " + s_code); // firebase
+	 * push // 여기에 푸시 알림 넣어줘야함. "근무 신청이 승인되었습니다"
+	 * 
+	 * return scheduleMapper.updateStatToP(s_code); }
+	 */
+
+	// ***********************/관리자/반복근무 일정 신청 조회/승인/거절**************************//
+
+	@Override
+	public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(long c_code) { // 목록 조회
+
+		log.info("getListAppliedRepeatSchedule");
+		log.info("c_code: " + c_code);
+
+		return scheduleRepeatMapper.selectMultiByCcodeStatIsW(c_code);
+	}
+
+	@Override
+	public int rejectAppliedRepeatedSchedule(int sr_code) {
+
+		log.info("rejectAppliedRepeatedSchedule");
+		log.info("sr_code: " + sr_code);
+
+		// firebase push
+		// 여기에 푸시 알림 넣어줘야함. "반복근무 신청이 거절되었습니다"
+
+		return scheduleRepeatMapper.delete(sr_code);
+	}
+
+	@Override
+	public int permitAppliedRepeatedSchedule(int sr_code) {
+
+		log.info("permitAppliedRepeatedSchedule");
+		log.info("sr_code: " + sr_code);
+
+		// firebase push
+		// 여기에 푸시 알림 넣어줘야함. "반복근무 신청이 승인되었습니다"
+
+		int result = scheduleRepeatMapper.updateStatToPAndReturn(sr_code);
+
+		if (result == 1) {
+			ScheduleRepeatVO scheduleRepeat = scheduleRepeatMapper.select(sr_code);
+			whenInsert(scheduleRepeat);
+		}
+
+		return result;
+	}
+
+//	public void rejectAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 신청 거절
+
+//	public void permitAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 신청 승인
+
+	// ***********************/관리자/근무 일정 변경 조회/승인/거절**************************//
+
+//	public void getListAppliedScheduleChange(ScheduleChangeVO scheduleChange); // 상태가 신청중 인 신청 목록 조회
+
+//	public void rejectAppliedScheduleChange(ScheduleChangeVO scheduleChange); // 근무 신청 거절
+
+//	public void permitAppliedScheduleChange(ScheduleChangeVO scheduleChange); // 근무 신청 승인
+
+	// ***********************/관리자/반복근무 일정 신청 조회/승인/거절**************************//
+
+//	public void getListAppliedRepeatedScheduleChange(ScheduleRepeatChangeVO scheduleRepeatChange); // 목록 조회
+
+//	public void rejectAppliedRepeatedScheduleChange(ScheduleRepeatChangeVO scheduleRepeatChange); // 신청 거절
+
+//	public void permitAppliedRepeatedScheduleChange(ScheduleRepeatChangeVO scheduleRepeatChange); // 신청 승인
 
 	// 거절된 스케줄 삭제하기
 	/*
@@ -167,29 +488,78 @@ public class ScheduleServiceImpl implements ScheduleService {
 //		return scheduleMapper.selectMultiByCcodeIdStatIsR(schedule);
 //	}
 
-	// ***********************근무 일정 반복**************************//
+	// ***********************/관리자/근무 취소 신청 조회/승인/거절**************************//
 
 	@Override
-	public int applyRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
-		log.info("applyRepeatedSchedule" + ForLog.dot);
+	public List<ScheduleVO> getListAppliedToCancelSchedule(long c_code) { // 근무 취소 신청 목록 조회
 
-		int dupCnt = checkDuplicateRepeat(scheduleRepeat);
+		log.info("getListAppliedToCancelSchedule");
+		log.info("c_code: " + c_code);
 
-		if (dupCnt > 0) {
-			log.info("Duplicated Repeat Count: " + dupCnt);
-			return 0;
-		} else if (dupCnt < 0) {
-			log.info("Duplicated Schedule Exist.");
-			return -1;
-		}
-
-		int result = scheduleRepeatMapper.insert(scheduleRepeat);
-
-		if (result == 1) {
-			whenInsert(scheduleRepeat);
-		}
-		return result;
+		return scheduleMapper.selectMultiByCcodeStatIsD(c_code); // select stat is D
 	}
+
+	@Override
+	public int permitAppliedToCancelSchedule(int s_code) { // 근무 취소 신청 승인
+
+		log.info("permitAppliedToCancelSchedule");
+		log.info("s_code: " + s_code);
+
+		// firebase push
+		// 여기에 푸시 알림 넣어줘야함. "근무 취소가 승인되었습니다"
+
+		return scheduleMapper.delete(s_code); // delete
+	}
+
+	/*
+	 * @Override public int rejectAppliedToCancelSchedule(int s_code) { // 근무 취소 신청
+	 * 거절
+	 * 
+	 * log.info("rejectAppliedToCancelSchedule"); log.info("s_code: " + s_code);
+	 * 
+	 * // firebase push // 여기에 푸시 알림 넣어줘야함. "근무 취소가 거절되었습니다"
+	 * 
+	 * return scheduleMapper.updateStatToP(schedule); // update stat to p }
+	 */
+
+	// ***********************/관리자/반복근무 취소 신청 조회/승인/거절**************************//
+
+	@Override
+	public List<ScheduleRepeatVO> getListAppliedToCancelRepeatedSchedule(long c_code) {
+
+		log.info("getListAppliedToCancelRepeatedSchedule");
+		log.info("c_code: " + c_code);
+
+		return scheduleRepeatMapper.selectMultiByCcodeStatIsW(c_code); // select stat is D
+	}
+
+	@Override
+	public int permitAppliedToCancelRepeatedSchedule(int sr_code) {
+
+		log.info("permitListAppliedToCancelRepeatedSchedule");
+		log.info("sr_code: " + sr_code);
+
+		// firebase push
+		// 여기에 푸시 알림 넣어줘야함. "반복근무 취소가 승인되었습니다"
+
+		if (scheduleMapper.deleteBySrcodeStart(sr_code) != 0 && scheduleRepeatMapper.deleteBySrcode(sr_code) != 0)
+			// delete from schedule_repeat where sr_code = #{sr_code}
+			// delete from schedule where sr_code = #{sr_code} and s_start > sysdate
+			return 1;
+
+		return 0;
+	}
+
+	/*
+	 * @Override public int rejectAppliedToCancelRepeatedSchedule(int sr_code) {
+	 * 
+	 * log.info("rejectListAppliedToCancelRepeatedSchedule"); log.info("sr_code: " +
+	 * sr_code);
+	 * 
+	 * // firebase push // 여기에 푸시 알림 넣어줘야함. "반복근무 취소가 거절되었습니다"
+	 * 
+	 * return scheduleRepeatMapper.updateStatToP(sr_code); // update stat to p }
+	 */
 
 	public int checkDuplicateRepeat(ScheduleRepeatVO scheduleRepeat) {
 		log.info("checkDuplicateRepeat........................");
@@ -267,51 +637,55 @@ public class ScheduleServiceImpl implements ScheduleService {
 			}
 		}
 		if (dup) {
+			log.info("Duplicated Schedule Exist" + ForLog.dot);
 			return -1;
 		}
-
-		int cntDup = 0;
 
 		List<ScheduleRepeatVO> scheduleRepeatExist = scheduleRepeatMapper.getCountDuplicated(scheduleRepeat);
 
 		for (ScheduleRepeatVO exist : scheduleRepeatExist) {
+
 			String[] rDayListEx = exist.getSr_repeat().split("");
 
 			String srStartEx = exist.getSr_start();
 			String srEndEx = exist.getSr_end();
 
 			if (checkDuplicateDay(rDayList, rDayListEx) && checkTime(srStart, srStartEx, srEnd, srEndEx)) {
-				cntDup += 1;
+
+				log.info("Duplicated Schedule_Repeat Exist" + ForLog.dot);
+
+				return 1;
 			}
 		}
 
-		if (cntDup == 0) {
-			log.info("There's No Duplicated.");
-		} else {
-			log.info("Duplicated Count: " + cntDup);
-		}
+		log.info("There's No Duplicated.");
 
-		return cntDup;
+		return 0;
 	}
 
 	public boolean checkDuplicateDay(String[] rDayList, String[] rDayListEx) {
-		log.info("checkDuplicateDay Start.................................");
-		for (String i : rDayList) {
-			for (String j : rDayListEx) {
-				log.info("checkDuplicate: " + i + ", " + j);
-				if (i.equals(j)) {
-					log.info("checkDuplicateDay End/return true......................");
-					return true;
-				}
-			}
+
+		log.info("checkDuplicateDay Start" + ForLog.dot);
+
+		HashSet<String> rDaySet = new HashSet<>();
+		HashSet<String> rDaySetEx = new HashSet<>();
+
+		rDaySet.addAll(Arrays.asList(rDayList));
+		rDaySetEx.addAll(Arrays.asList(rDayListEx));
+
+		if (!rDaySet.isEmpty()) {
+			log.info("checkDuplicateDay End/return true" + ForLog.dot);
+			return true;
 		}
 
-		log.info("checkDuplicateDay End/return false......................");
+		log.info("checkDuplicateDay End/return false" + ForLog.dot);
 		return false;
 	}
 
 	public boolean checkTime(String srStart, String srStartEx, String srEnd, String srEndEx) {
-		log.info("checkTime Start......................");
+
+		log.info("checkTime Start" + ForLog.dot);
+
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 		Calendar ss = Calendar.getInstance();
@@ -476,51 +850,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return repeat == null ? new String[] {} : repeat.split("");
 	}
 
-	// ***********************근무 변경 신청**************************//
-
-	@Override
-	public boolean isWritable(int s_code) {
-		log.info("isWritable.................");
-
-		if (scheduleChangeMapper.getCountByScodeStatIsW(s_code) == 0)
-			return true;
-
-		return false;
-	}
-
-	@Override
-	public int applyChangeSchedule(ScheduleChangeVO scheduleChange) {
-		log.info("requestChangeSchedule..............");
-
-		if (isWritable(scheduleChange.getS_code())) {
-			return scheduleChangeMapper.insert(scheduleChange);
-		}
-
-		return 0;
-	}
-
-	/*
-	 * @Override public int modifyRequest(ScheduleChangeVO scheduleChange) {
-	 * log.info("modifyRequest.......................");
-	 * 
-	 * return mapper.update(scheduleChange); }
-	 */
-
-	@Override
-	public ScheduleChangeVO getApplySingle(int s_code) {
-		log.info("getRequest............................");
-
-		return scheduleChangeMapper.select(s_code);
-	}
-
-	@Override
-	public int cancelRequest(int s_code) {
-		log.info("cancelRequest......................");
-
-		return scheduleChangeMapper.delete(s_code);
-	}
-
-//	@Scheduled(cron = "0/3 * * * * *")
+	// @Scheduled(cron = "0/3 * * * * *")
 	public void testtask() {
 		log.info("test");
 	}

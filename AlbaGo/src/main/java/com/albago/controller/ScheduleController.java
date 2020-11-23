@@ -339,7 +339,7 @@ public class ScheduleController {
 		scheduleChange.setSc_end(sc_end);
 		scheduleChange.setSc_reason(sc_reason);
 
-		return scheduleService.applyChangeSchedule(scheduleChange);
+		return scheduleService.applyScheduleChange(scheduleChange);
 	}
 
 	// 근무 일정 변경 요청 내용 변경
@@ -369,7 +369,7 @@ public class ScheduleController {
 
 		log.info("insertScheduleChange.........................");
 
-		return scheduleService.getApplySingle(s_code);
+		return scheduleService.lookUpAppliedScheduleChange(s_code);
 	}
 
 	// 근무 일정 변경 요청 취소

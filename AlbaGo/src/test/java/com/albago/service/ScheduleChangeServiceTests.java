@@ -36,7 +36,7 @@ public class ScheduleChangeServiceTests {
 		scheduleChange.setSc_end("2020-12-24 16:00:00");
 		scheduleChange.setSc_reason("제발 집좀 보내줘라 팀장아");
 
-		log.info("Result_testRequestChangeSchedule: " + service.applyChangeSchedule(scheduleChange));
+		log.info("Result_testRequestChangeSchedule: " + service.applyScheduleChange(scheduleChange));
 	}
 
 //	@Test
@@ -58,13 +58,13 @@ public class ScheduleChangeServiceTests {
 	public void testGetRequest() {
 		log.info("testGetRequest..........................");
 
-		log.info("Result_testGetRequest: " + service.getApplySingle(2022));
+		log.info("Result_testGetRequest: " + service.lookUpAppliedScheduleChange(2022));
 	}
 
 	@Test
 	public void testCancelRequest() {
 		log.info("testCancelRequest.........................");
 
-		log.info("Result_testCancelRequest: " + service.cancelRequest(2022));
+		log.info("Result_testCancelRequest: " + service.cancelScheduleChange(2022));
 	}
 }

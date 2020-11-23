@@ -15,7 +15,6 @@ import com.albago.domain.HistoryVO;
 import com.albago.domain.ScheduleRepeatVO;
 import com.albago.domain.ScheduleVO;
 import com.albago.mapper.HistoryMapper;
-import com.albago.util.RepeatSchedule;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -32,9 +31,6 @@ public class ScheduleServiceTests {
 	private HistoryMapper mapper;
 
 	@Setter(onMethod_ = @Autowired)
-	private ScheduleRepeatService scheduleRepeatService;
-
-	@Setter(onMethod_ = @Autowired)
 	private ScheduleService scheduleService;
 
 //	@Test
@@ -48,7 +44,7 @@ public class ScheduleServiceTests {
 		log.info("ScheduleVO: " + service.getTodaysSchedule(schedule));
 	}
 
-	@Test
+//	@Test
 	public void testGetSchedule() {
 		log.info("testGetSchedule........................");
 
@@ -167,6 +163,12 @@ public class ScheduleServiceTests {
 				}
 			}
 		}
+	}
 
+	@Test
+	public void test() {
+		int sr_code = 282;
+
+		service.permitAppliedRepeatedSchedule(sr_code);
 	}
 }

@@ -13,4 +13,6 @@ public class CompanyVO {
 	private int c_pday;
 	private int c_eday;
 	private String c_type;
+	private String c_mac;
+	private String u_id;
 }

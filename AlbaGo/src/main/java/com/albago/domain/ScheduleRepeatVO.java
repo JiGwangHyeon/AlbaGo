@@ -11,4 +11,5 @@ public class ScheduleRepeatVO {
 	private String sr_start;
 	private String sr_end;
 	private String sr_repeat;
+	private char sr_stat;
 }

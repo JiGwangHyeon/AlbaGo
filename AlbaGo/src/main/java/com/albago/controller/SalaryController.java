@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.albago.domain.HistoryVO;
 import com.albago.domain.ScheduleVO;
 import com.albago.domain.WageVO;
 import com.albago.service.SalaryService;
@@ -60,12 +61,12 @@ public class SalaryController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		WageVO wage = new WageVO();
+		HistoryVO history = new HistoryVO();
 
-		wage.setU_id(u_id);
-		wage.setC_code(c_code);
+		history.setU_id(u_id);
+		history.setC_code(c_code);
 
-		return new ResponseEntity<>(wageService.getPay(wage), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+		return new ResponseEntity<>(wageService.getPay(history), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
 	}
 
 	@GetMapping(value = "/getExpected/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })

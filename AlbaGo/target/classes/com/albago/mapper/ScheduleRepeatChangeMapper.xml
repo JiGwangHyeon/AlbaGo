@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.albago.mapper.ScheduleRepeatChangeMapper">
+
+	<select id="getCountBySrcodeStatIsW" resultType="int">
+		SELECT Count(src_code)
+		  FROM schedule_repeat_change
+		 WHERE src_stat = 'W' 
+		   AND sr_code = #{sr_code}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO schedule_repeat_change
+		            (src_code
+		             , sr_code
+		             , src_start
+		             , src_end
+		             , src_repeat
+		             , src_reason
+		             , src_reply)
+		     VALUES ( seq_src_code.nextval
+		              , #{sr_code}
+		              , #{src_start}
+		              , #{src_end}
+		              , #{src_repeat}
+		              , #{src_reason}
+		              , #{src_reply} ) 
+	</insert>
+	
+	<select id="selectSingleBySrcodeStatIsW" resultType="com.albago.domain.ScheduleRepeatChangeVO">
+		SELECT *
+		  FROM schedule_repeat_change
+		 WHERE sr_code = #{sr_code}
+		   AND sc_stat = 'W'
+	</select>
+	
+	<update id="updateStartEndRepeatReason">
+		UPDATE schedule_repeat_change
+		   SET src_start = To_date( #{src_start}, 'yyyy-mm-dd hh24:mi:ss')
+		       , src_end = To_date( #{src_end}, 'yyyy-mm-dd hh24:mi:ss')
+		       , src_reason = #{src_reason}
+		 WHERE sr_code = #{sr_code}
+		   AND src_stat = 'W' 
+	</update>
+	
+ 	<delete id="deleteBySrcodeStatIsW">
+		DELETE FROM schedule_repeat_change
+		 WHERE sr_code = #{sr_code}
+		   AND src_stat = 'W'
+	</delete>
+	
+	<!-- <update id="updateStat">
+		
+	</update> -->
+	
+</mapper>

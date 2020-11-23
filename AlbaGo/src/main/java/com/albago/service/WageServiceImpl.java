@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.albago.domain.HistoryVO;
 import com.albago.domain.WageVO;
+import com.albago.mapper.HistoryMapper;
 import com.albago.mapper.WageMapper;
 
 import lombok.AllArgsConstructor;
@@ -15,13 +17,14 @@ import lombok.extern.log4j.Log4j;
 @AllArgsConstructor
 public class WageServiceImpl implements WageService {
 
-	private WageMapper mapper;
+	private WageMapper wageMapper;
+	private HistoryMapper historyMapper;
 
 	@Override
 	public List<WageVO> getWageList(WageVO wage) {
 		log.info("getWageList");
 
-		List<WageVO> list = mapper.getWageList(wage);
+		List<WageVO> list = wageMapper.getWageList(wage);
 
 		for (WageVO wageVO : list) {
 			wageVO.setW_base(wageVO.getW_base());
@@ -35,10 +38,10 @@ public class WageServiceImpl implements WageService {
 	}
 
 	@Override
-	public int getPay(WageVO wage) {
+	public int getPay(HistoryVO history) {
 		log.info("getPay.....");
 
-		return mapper.getPay(wage);
+		return historyMapper.getPay(history);
 	}
 
 //	@Scheduled()

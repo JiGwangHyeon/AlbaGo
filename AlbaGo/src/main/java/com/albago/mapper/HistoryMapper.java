@@ -7,4 +7,6 @@ import com.albago.domain.HistoryVO;
 public interface HistoryMapper {
 
 	public List<HistoryVO> makeDummy();
+
+	public int getPay(HistoryVO history);
 }

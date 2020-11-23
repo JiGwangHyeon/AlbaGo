@@ -9,15 +9,20 @@ import com.albago.domain.ScheduleChangeVO;
 
 public interface ScheduleChangeMapper {
 
-	public int insert(ScheduleChangeVO scheduleChange);
-
-	public int delete(int s_code);
-
-	public ScheduleChangeVO select(int s_code);
+//	직원
 
 	public int getCountByScodeStatIsW(int s_code);
 
-//	public int update(ScheduleChangeVO scheduleChange);
+	public int insert(ScheduleChangeVO scheduleChange);
+
+	public ScheduleChangeVO selectSingleByScodeStatIsW(int s_code);
+
+	public int deleteByScodeStatIsW(int s_code);
+
+	public int updateStartEndReason(ScheduleChangeVO scheduleChange);
 
 //	public int updateStat(ScheduleChangeVO scheduleChange);
+
+//	관리자
+
 }

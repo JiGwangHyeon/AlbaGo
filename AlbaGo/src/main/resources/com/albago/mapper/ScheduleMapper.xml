@@ -2,34 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.ScheduleMapper">
 	
-	<insert id="insert">
-		INSERT INTO schedule
-		            (s_code
-		             , c_code
-		             , u_id
-		             , s_start
-		             , s_end
-		             <if test='sr_code!=0'>
-					 , sr_code
-					 </if>)
-		     VALUES ( seq_s_code.nextval
-		              , #{c_code}
-		              , #{u_id}
-		              , To_date( #{s_start}, 'YYYY-MM-DD HH24:MI')
-		              , To_date( #{s_end}, 'YYYY-MM-DD HH24:MI') 
-		              <if test='sr_code!=0'>
-					  , #{sr_code}
-					  </if>)
-	</insert>
+	<!-- 직원 - 기본 기능 -->
 	
-	<update id="updateStartEnd">
-		UPDATE schedule
-		   SET s_start = To_date( #{s_start}, 'YYYY-MM-DD HH24:MI')
-		       , s_end = To_date( #{s_end}, 'YYYY-MM-DD HH24:MI') 
-		 WHERE s_code = #{s_code}
+	<select id="selectSingleByCcodeIdToday" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		  FROM schedule
+		 WHERE c_code = #{c_code}
 		   AND u_id = #{u_id}
-		   AND s_stat = 'W'
-	</update>
+		   AND To_char(s_start, 'yyyymmdd') = To_char(sysdate, 'yyyymmdd')
+		   AND s_stat = 'P'
+	</select>
+	
+	<select id="selectSingleByScode" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		  FROM schedule
+		 WHERE s_code = #{s_code} 
+		   AND u_id = #{u_id}
+	</select>
 	
 	<update id="updateArrive">
 		UPDATE schedule
@@ -45,80 +34,7 @@
 		   AND s_leave IS NULL 
 	</update>
 	
-	<update id="updateStatToD">
-		UPDATE schedule
-		   SET s_stat = 'D'
-		 WHERE u_id = # {u_id}
-		   AND s_code = # {s_code} 		
-	</update>
-	
-	<delete id="deleteByScodeStatIsR">
-		DELETE FROM schedule
-		 WHERE s_code = #{s_code} 
-		   AND u_id = #{u_id}
-		   AND s_stat = 'R'  
-	</delete>
-	
-	<!-- <delete id="deleteByCcodeStatIsR">
-		DELETE FROM schedule
-		 WHERE c_code = #{c_code}
-		   AND u_id = #{u_id}
-		   AND s_stat = 'R'  
-	</delete> -->
-	
-	<select id="getCountDuplicated" resultType="int">
-		<![CDATA[
-			SELECT Count(s_code)
-			  FROM (SELECT *
-			          FROM schedule
-			         WHERE u_id = #{u_id}
-			           AND c_code = #{c_code}
-			           AND s_stat != 'R'
-			           AND Trunc(s_start) = Trunc(To_date( #{s_start}, 'yyyy-mm-dd hh24:mi'))) tbl
-			 WHERE ( tbl.s_start <= To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')
-			         AND tbl.s_end > To_date( #{s_start}, 'yyyy-mm-dd hh24:mi') )
-			    OR ( tbl.s_start < To_date( #{s_end}, 'yyyy-mm-dd hh24:mi')
-			         AND tbl.s_end > To_date( #{s_end}, 'yyyy-mm-dd hh24:mi') )
-			    OR ( tbl.s_start > To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')
-			         AND tbl.s_end < To_date( #{s_end}, 'yyyy-mm-dd hh24:mi') )
-			    OR ( Trunc(tbl.s_start) = Trunc(To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')) )
-			    OR ( Trunc(tbl.s_end) = Trunc(To_date( #{s_end}, 'yyyy-mm-dd hh24:mi')) ) 
-		]]>		
-	</select>
-	
-	<select id="selectSingleByScode" resultType="com.albago.domain.ScheduleVO">
-		SELECT *
-		  FROM schedule
-		 WHERE s_code = #{s_code} 
-	</select>
-	
-	<select id="selectSingleByCcodeIdToday" resultType="com.albago.domain.ScheduleVO">
-		SELECT *
-		  FROM schedule
-		 WHERE c_code = #{c_code}
-		   AND u_id = #{u_id}
-		   AND To_char(s_start, 'yyyymmdd') = To_char(sysdate, 'yyyymmdd')
-		   AND s_stat = 'P'
-	</select>
-	
-	<select id="selectMultiByStartIsTwoDayAgo" resultType="com.albago.domain.ScheduleVO">
-		SELECT *
-		  FROM schedule
-		 WHERE To_char(s_start, 'YYYYMMDD') = To_char(SYSDATE - ( interval '2' day ), 'YYYYMMDD')
-		   AND s_stat = 'P'
-	</select>
-	
-	<!-- <select id="selectMultiByCcodeIdStatIsR" resultType="com.albago.domain.ScheduleVO">
-		SELECT *
-		  FROM schedule
-		 WHERE c_code = #{c_code}
-		   AND u_id = #{u_id}
-		   AND s_stat = 'R'
-		 ORDER BY s_start 
-	</select> -->
-	
 	<select id="selectMultiByCcodeIdWeek" resultType="com.albago.domain.ScheduleVO">
-
 		<![CDATA[
 			SELECT s_code
 			       , c_code
@@ -155,6 +71,82 @@
 		 ORDER BY s_start 
 	</select>
 	
+	<!-- 직원 - 근무 신청 -->
+	
+	<select id="getCountDuplicated" resultType="int">
+		<![CDATA[
+			SELECT Count(s_code)
+			  FROM (SELECT *
+			          FROM schedule
+			         WHERE u_id = #{u_id}
+			           AND c_code = #{c_code}
+			           AND s_stat != 'R'
+			           AND Trunc(s_start) = Trunc(To_date( #{s_start}, 'yyyy-mm-dd hh24:mi'))) tbl
+			 WHERE ( tbl.s_start <= To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')
+			         AND tbl.s_end > To_date( #{s_start}, 'yyyy-mm-dd hh24:mi') )
+			    OR ( tbl.s_start < To_date( #{s_end}, 'yyyy-mm-dd hh24:mi')
+			         AND tbl.s_end > To_date( #{s_end}, 'yyyy-mm-dd hh24:mi') )
+			    OR ( tbl.s_start > To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')
+			         AND tbl.s_end < To_date( #{s_end}, 'yyyy-mm-dd hh24:mi') )
+			    OR ( Trunc(tbl.s_start) = Trunc(To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')) )
+			    OR ( Trunc(tbl.s_end) = Trunc(To_date( #{s_end}, 'yyyy-mm-dd hh24:mi')) ) 
+		]]>		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO schedule
+		            (s_code
+		             , c_code
+		             , u_id
+		             , s_start
+		             , s_end
+		             <if test='sr_code!=0'>
+					 , sr_code
+					 </if>)
+		     VALUES ( seq_s_code.nextval
+		              , #{c_code}
+		              , #{u_id}
+		              , To_date( #{s_start}, 'YYYY-MM-DD HH24:MI')
+		              , To_date( #{s_end}, 'YYYY-MM-DD HH24:MI') 
+		              <if test='sr_code!=0'>
+					  , #{sr_code}
+					  </if>)
+	</insert>
+	
+	<update id="updateStartEnd">
+		UPDATE schedule
+		   SET s_start = To_date( #{s_start}, 'YYYY-MM-DD HH24:MI')
+		       , s_end = To_date( #{s_end}, 'YYYY-MM-DD HH24:MI') 
+		 WHERE s_code = #{s_code}
+		   AND u_id = #{u_id}
+		   AND s_stat = 'W'
+	</update>
+	
+	<delete id="deleteByScodeStatIsW">
+		DELETE FROM schedule
+		 WHERE s_code = #{s_code} 
+		   AND u_id = #{u_id}
+		   AND s_stat = 'W'  
+	</delete>
+	
+	<!-- 직원 - 근무 삭제 -->
+	
+	<update id="updateStatToD">
+		UPDATE schedule
+		   SET s_stat = 'D'
+		 WHERE u_id = #{u_id}
+		   AND s_code = #{s_code} 		
+	</update>
+	
+	<update id="updateStatToP">
+		UPDATE schedule
+		   SET s_stat = 'P'
+		 WHERE u_id = #{u_id}
+		   AND s_code = #{s_code} 		
+	</update>
+	
+	<!-- 직원 - 반복근무 -->
+	
 	<select id="selectMultiByCcodeIdStart" resultType="com.albago.domain.ScheduleVO">
 		SELECT *
 		  FROM schedule
@@ -164,10 +156,72 @@
 		   AND s_end > sysdate 
 	</select>
 	
+	<!-- 관리자 - 근무 신청 -->
+	
+	<select id="selectMultiByCcodeStatIsW" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		  FROM schedule
+		 WHERE c_code = # {c_code}
+		   AND s_stat = 'W' 
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM schedule
+		 WHERE s_code = # {s_code} 
+	</delete>
+	
+	<!-- <update id="updateStatToP">
+		UPDATE schedule
+		   SET s_stat = 'P'
+		 WHERE s_code = #{s_code} 		
+	</update> -->
+	
+	<!-- 관리자 - 근무 취소 신청 -->
+	
+	<select id="selectMultiByCcodeStatIsD">
+		SELECT *
+		  FROM schedule
+		 WHERE c_code = # {c_code}
+		   AND s_stat = 'D' 
+	</select>
+	
+	<!-- <delete id="delete">
+		DELETE FROM schedule
+		 WHERE s_code = # {s_code} 
+	</delete> -->
+	
+	<!-- <update id="updateStatToP">
+		UPDATE schedule
+		   SET s_stat = 'P'
+		 WHERE s_code = #{s_code} 		
+	</update> -->
+	
+	<!-- 관리자 - 반복근무 취소 신청 -->
+	
+	<delete id="deleteBySrcodeStart">
+		DELETE FROM schedule
+		 WHERE sr_code = # {sr_code}
+		   AND s_start > sysdate 
+	</delete>
+	
+	<!-- 급여 관련 -->
+	
+	<select id="selectMultiByStartIsTwoDayAgo" resultType="com.albago.domain.ScheduleVO">
+		SELECT *
+		  FROM schedule
+		 WHERE To_char(s_start, 'YYYYMMDD') = To_char(SYSDATE - ( interval '2' day ), 'YYYYMMDD')
+		   AND s_stat = 'P'
+	</select>
+	
 	<select id="selectMultiForExpect" resultType="com.albago.domain.ScheduleVO">
-	<![CDATA[
-		select * from schedule where c_code = #{c_code} and u_id = #{u_id} and s_start >= To_date( #{s_start}, 'yyyy-mm-dd hh24:mi') and s_start<To_date( #{s_end}, 'yyyy-mm-dd hh24:mi')
-	]]>
+		<![CDATA[
+			SELECT *
+			  FROM schedule
+			 WHERE c_code = #{c_code}
+			   AND u_id = #{u_id}
+			   AND s_start >= To_date( #{s_start}, 'yyyy-mm-dd hh24:mi')
+			   AND s_start < To_date( #{s_end}, 'yyyy-mm-dd hh24:mi') 
+		]]>
 	</select>
 	
 </mapper>

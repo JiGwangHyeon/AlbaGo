@@ -11,4 +11,5 @@ public class HistoryVO {
 	private String h_edate;
 	private String h_qdate;
 	private char h_position;
+	private int h_perhour;
 }

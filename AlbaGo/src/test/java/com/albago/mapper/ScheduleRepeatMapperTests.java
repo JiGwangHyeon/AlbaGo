@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,7 +39,7 @@ public class ScheduleRepeatMapperTests {
 		log.info("sr_code: " + scheduleRepeat.getSr_code());
 	}
 
-	@Test
+//	@Test
 	public void testGetListForCheckDuplicate() {
 		log.info("testGetListForCheckDuplicate...................");
 
@@ -74,7 +73,7 @@ public class ScheduleRepeatMapperTests {
 		log.info("cntDup : " + cntDup);
 	}
 
-	@Test
+//	@Test
 	public boolean checkDuplicateDay(String[] rDayList, String[] rDayListEx) {
 		for (String i : rDayList) {
 			for (String j : rDayListEx) {
@@ -87,7 +86,7 @@ public class ScheduleRepeatMapperTests {
 		return false;
 	}
 
-	@Test
+//	@Test
 	public boolean checkTime(String srStart, String srStartEx, String srEnd, String srEndEx) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
