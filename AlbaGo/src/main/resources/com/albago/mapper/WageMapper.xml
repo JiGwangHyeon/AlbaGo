@@ -49,10 +49,11 @@
 		  FROM wage
 		 WHERE c_code = #{c_code}
 		   AND u_id = #{u_id} 
+      ORDER BY w_month desc
 	</select>
 	
 	<select id="getPay" resultType = "int">
-		select p_perhour from pay
+		select h_perhour from History
 		 WHERE c_code = #{c_code}
 		   AND u_id = #{u_id} 
 	</select>

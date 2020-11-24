@@ -17,25 +17,24 @@ import lombok.extern.log4j.Log4j;
 public class ScheduleRepeatServiceTests {
 
 	@Setter(onMethod_ = @Autowired)
-	private ScheduleRepeatService service;
+	private ScheduleService service;
 
-//	@Test
+	@Test
 	public void testInsert() {
 		log.info("testInsert............................");
 
 		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
 
-		scheduleRepeat.setC_code(1234123521);
-		scheduleRepeat.setU_id("gkdud0941");
-		scheduleRepeat.setSr_start("12:00:00");
-		scheduleRepeat.setSr_end("18:00:00");
-		scheduleRepeat.setSr_repeat("034");
+		scheduleRepeat.setC_code(1234567890);
+		scheduleRepeat.setU_id("kwang2951");
+		scheduleRepeat.setSr_start("12:00");
+		scheduleRepeat.setSr_end("18:00");
+		scheduleRepeat.setSr_repeat("0134");
 
 		log.info("testInsert_result: " + service.applyRepeatedSchedule(scheduleRepeat));
-		log.info("sr_code: " + scheduleRepeat.getSr_code());
 	}
 
-	@Test
+//	@Test
 	public void testcheckDuplicateRepeat() {
 		log.info("testCheck............................");
 

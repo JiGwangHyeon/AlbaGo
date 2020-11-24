@@ -21,7 +21,7 @@
 	</select>
 	
 	<select id="getPay" resultType = "int">
-		select p_perhour from pay
+		select h_perhour from history
 		 WHERE c_code = #{c_code}
 		   AND u_id = #{u_id} 
 	</select>

@@ -3,7 +3,8 @@
 <mapper namespace="com.albago.mapper.NoticeMapper">
 	<select id="getList" resultType="com.albago.domain.NoticeVO">
 		SELECT *
-		FROM   notice
-		WHERE  c_code = #{c_code} 
+		  FROM notice
+		 WHERE c_code = #{c_code}
+		 ORDER BY n_code DESC
 	</select>
 </mapper>

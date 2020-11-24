@@ -155,7 +155,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return scheduleMapper.deleteByScodeStatIsW(schedule);
 	}
 
-	// ***********************/직원/근무 일정 반복 신청 및 조회**************************//
+	// ***********************/직원/반복근무 신청 및 조회**************************//
 
 	@Override
 	public int applyRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
@@ -172,6 +172,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 
 		int result = scheduleRepeatMapper.insert(scheduleRepeat);
+
+		log.info("applyRepeatedSchedule_result: " + result);
 
 		/*
 		 * 관리자가 실행해야 할 부분 if (result == 1) { whenInsert(scheduleRepeat); }
@@ -193,6 +195,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		log.info("editAppliedRepeateSchedule" + ForLog.dot);
 		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		scheduleRepeat = scheduleRepeatMapper.selectSingleBySrcode(scheduleRepeat);
 
 		int dupCheck = checkDuplicateRepeat(scheduleRepeat);
 
@@ -447,10 +451,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		return result;
 	}
-
-//	public void rejectAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 신청 거절
-
-//	public void permitAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 신청 승인
 
 	// ***********************/관리자/근무 일정 변경 조회/승인/거절**************************//
 
