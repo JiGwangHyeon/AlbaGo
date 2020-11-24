@@ -46,6 +46,7 @@
 		  FROM userinfo
 		 WHERE u_id = #{u_id}
 		   AND u_pw = <include refid="pw_encrypt"></include>
+		   AND u_position = 'E'
 	</select>
 
 	<select id="getCountByNameEmail" resultType="int">
