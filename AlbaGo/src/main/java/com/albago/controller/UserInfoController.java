@@ -294,5 +294,22 @@ public class UserInfoController {
 
 		return new ResponseEntity<>(userInfoService.editProfile(userInfo), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
 	}
+	
+	// 아이디와 비번이 일치하는지 확인
+	@GetMapping(value = "/get/correct/{u_pw}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<Integer> isPwCorrect(@PathVariable("u_pw") String u_pw, HttpServletRequest request) {
+		log.info("deleteUser 호출.....................");
+		
+		UserInfoVO userInfo = new UserInfoVO();
 
+		HttpSession session = request.getSession();
+		String u_id = (String) session.getAttribute("u_id");
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		userInfo.setU_id(u_id);
+		userInfo.setU_pw(u_pw);
+
+		return new ResponseEntity<>(userInfoService.isPwCorrect(userInfo), HttpStatus.OK); // 계정 삭제 결과 반환, 1이면 정상
+	}
 }

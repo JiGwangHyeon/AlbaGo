@@ -91,4 +91,11 @@
 		DELETE userinfo
 		 WHERE u_id = #{u_id} 
 	</delete>
+	
+	<select id="isPwCorrect" resultType="int">
+		SELECT Count(u_id) 
+			FROM   userinfo 
+			WHERE  u_id = #{u_id} 
+       			AND u_pw = <include refid="pw_encrypt"></include>
+	</select>
 </mapper>

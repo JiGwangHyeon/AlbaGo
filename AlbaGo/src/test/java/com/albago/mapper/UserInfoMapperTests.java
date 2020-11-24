@@ -1,5 +1,6 @@
 package com.albago.mapper;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -115,5 +116,16 @@ public class UserInfoMapperTests {
 		userInfo.setU_addr("충북 청주시 흥덕구 강내면 황탄리길 226, 101-407");
 
 //		log.info("Result_testUpdate: " + mapper.update(userInfo));
+	}
+	
+	@Test
+	public void testIsPwCorrect() {
+		log.info("testIsPwCorrect.......................");
+		
+		UserInfoVO userInfo = new UserInfoVO();
+		
+		userInfo.setU_id("a");
+		userInfo.setU_pw("a");
+		log.info(mapper.isPwCorrect(userInfo));
 	}
 }

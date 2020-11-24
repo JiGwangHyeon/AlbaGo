@@ -25,4 +25,6 @@ public interface UserInfoMapper {
 	public int updatePhone(UserInfoVO userInfo);
 
 	public int delete(String u_id);
+	
+	public int isPwCorrect(UserInfoVO userInfo);
 }

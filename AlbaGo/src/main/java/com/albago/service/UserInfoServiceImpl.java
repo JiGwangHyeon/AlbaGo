@@ -102,4 +102,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 		return count;
 	}
+
+	@Override
+	public int isPwCorrect(UserInfoVO userInfo) {
+		
+		log.info("isPwCorrect.......................");
+		
+		return mapper.isPwCorrect(userInfo);
+	}
 }

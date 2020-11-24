@@ -23,4 +23,6 @@ public interface UserInfoService {
 	public String findId(UserInfoVO userInfo);
 
 	public int editProfile(UserInfoVO userInfo);
+	
+	public int isPwCorrect(UserInfoVO userInfo);
 }
