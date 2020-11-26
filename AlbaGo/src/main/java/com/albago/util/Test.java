@@ -10,10 +10,37 @@ public class Test {
 
 	public static void main(String[] args) {
 
-		String[] day = { "1", "5", "6" };
+		String sr_repeat = "156";
+		System.out.println(dayNumToString(sr_repeat));
 
-		System.out.println(getDate(day, "22:00", "HH:mm"));
+	}
 
+	public static String dayNumToString(String sr_repeat) {
+
+		String[] array = sr_repeat == null ? new String[] {} : sr_repeat.split("");
+
+		String[] day = { "", "일", "월", "화", "수", "목", "금", "토", "일" };
+
+		String result = "";
+
+		int i = 0;
+
+		System.out.println("array[0]: " + array[0]);
+		if (array[0].equals("1"))
+			array[0] = "8";
+		System.out.println("array[0]: " + array[0]);
+
+		Arrays.sort(array);
+
+		for (String s : array) {
+			result += day[Integer.parseInt(s)];
+			if (i != array.length - 1) {
+				result += ", ";
+			}
+			i += 1;
+		}
+
+		return result;
 	}
 
 	public static String[] getInterSet(String[] rDayListNew, String[] rDayListEx) {
@@ -64,7 +91,6 @@ public class Test {
 
 		try {
 			time.setTime(sdf.parse(startTime));
-			System.out.println(time);
 			System.out.println(time.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -76,17 +102,15 @@ public class Test {
 		clone.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
 		clone.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 		clone.set(Calendar.SECOND, time.get(Calendar.SECOND));
-		clone.add(Calendar.MILLISECOND, time.get(Calendar.MILLISECOND));
 
 		for (String i : day) {
 
 			int parseInt = Integer.parseInt(i);
 
 			Calendar cal = (Calendar) clone.clone();
-			cal.clear(Calendar.HOUR_OF_DAY);
-			cal.clear(Calendar.MINUTE);
-			cal.clear(Calendar.SECOND);
-			cal.add(Calendar.MILLISECOND, (int) time.get(Calendar.MILLISECOND));
+			cal.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+			cal.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+			cal.set(Calendar.SECOND, time.get(Calendar.SECOND));
 			System.out.println(cal.getTime());
 
 			if (parseInt == dayOfWeek) {
@@ -99,10 +123,13 @@ public class Test {
 
 		}
 
+		System.out.println(clone.getTime());
 		clone.add(Calendar.WEEK_OF_YEAR, 1);
+		System.out.println(clone.getTime());
 		clone.set(Calendar.DAY_OF_WEEK, Integer.parseInt(day[0]));
+		System.out.println(clone.getTime());
 
-		return getTime(now, Integer.parseInt(day[0]), sdf_return);
+		return getTime(clone, Integer.parseInt(day[0]), sdf_return);
 
 	}
 

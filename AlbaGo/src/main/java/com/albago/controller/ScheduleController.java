@@ -278,6 +278,29 @@ public class ScheduleController {
 	}
 
 	// 신청한 반복 근무 조회
+	@GetMapping(value = "/getList/repeat/{c_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<List<ScheduleRepeatVO>> getListAppliedRepeatedSchedule(@PathVariable("c_code") long c_code,
+			HttpServletRequest request) {
+
+		log.info("lookUpAppliedRepeatedSchedule" + ForLog.dot);
+
+		HttpSession session = request.getSession();
+
+		String u_id = (String) session.getAttribute("u_id");
+
+		if (u_id == null || u_id.trim().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
+
+		scheduleRepeat.setC_code(c_code);
+		scheduleRepeat.setU_id(u_id);
+
+		return new ResponseEntity<>(scheduleService.getListAppliedRepeatedSchedule(scheduleRepeat), HttpStatus.OK);
+	}
+
+	// 신청한 반복 근무 조회
 	@GetMapping(value = "/get/repeat/{sr_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<ScheduleRepeatVO> lookUpAppliedRepeatedSchedule(@PathVariable("sr_code") int sr_code,
 			HttpServletRequest request) {
@@ -323,7 +346,7 @@ public class ScheduleController {
 		return new ResponseEntity<>(scheduleService.editAppliedRepeatedSchedule(scheduleRepeat), HttpStatus.OK);
 	}
 
-	// 반복 근무 신청 내용 수정
+	// 반복 근무 신청 내용 취소
 	@GetMapping(value = "/cancel/repeat/{sr_code}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResponseEntity<Integer> cancelAppliedRepeatedSchedule(@PathVariable("sr_code") int sr_code,
 			HttpServletRequest request) {

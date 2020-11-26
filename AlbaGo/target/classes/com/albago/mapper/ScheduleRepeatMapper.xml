@@ -74,16 +74,16 @@
 	
 	<!-- 관리자 - 반복근무 신청 -->
 	
-	<select id="selectMultiByCcodeStatIsW" resultType="com.albago.domain.ScheduleRepeatVO">
+	<select id="selectMultiByCcode" resultType="com.albago.domain.ScheduleRepeatVO">
 		SELECT *
 		  FROM schedule_repeat
-		 WHERE c_code = # {c_code}
-		   AND sr_stat = 'W' 
+		 WHERE c_code = #{c_code}
+		   AND u_id = #{u_id}
 	</select>
 	
 	<delete id="delete">
 		DELETE FROM schedule_repeat
-		 WHERE sr_code = # {sr_code} 
+		 WHERE sr_code = #{sr_code} 
 	</delete>
 	
 	<update id="updateStatToPAndReturn">
@@ -103,7 +103,7 @@
 	<select id="selectMultiByCcodeStatIsD" resultType="com.albago.domain.ScheduleRepeatVO">
 		SELECT *
 		  FROM schedule_repeat
-		 WHERE c_code = # {c_code}
+		 WHERE c_code = #{c_code}
 		   AND sr_stat = 'D' 
 	</select>
 	

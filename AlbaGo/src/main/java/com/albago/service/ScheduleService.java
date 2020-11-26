@@ -37,6 +37,8 @@ public interface ScheduleService {
 
 	public int applyRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 신청
 
+	public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 목록 조회
+
 	public ScheduleRepeatVO lookUpAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 조회
 
 	public int editAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat); // 수정
@@ -85,7 +87,7 @@ public interface ScheduleService {
 
 	// ***********************/관리자/반복근무 일정 신청 조회/승인/거절**************************//
 
-	public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(long c_code); // 목록 조회
+//	public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(long c_code); // 목록 조회
 
 	public int rejectAppliedRepeatedSchedule(int sr_code); // 신청 거절
 
@@ -117,7 +119,7 @@ public interface ScheduleService {
 
 	// ***********************/관리자/근무 삭제 반복 신청 조회/승인/거절**************************//
 
-	public List<ScheduleRepeatVO> getListAppliedToCancelRepeatedSchedule(long c_code);
+//	public List<ScheduleRepeatVO> getListAppliedToCancelRepeatedSchedule(long c_code);
 
 	public int permitAppliedToCancelRepeatedSchedule(int sr_code);
 

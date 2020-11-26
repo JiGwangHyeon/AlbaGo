@@ -161,13 +161,13 @@
 	<select id="selectMultiByCcodeStatIsW" resultType="com.albago.domain.ScheduleVO">
 		SELECT *
 		  FROM schedule
-		 WHERE c_code = # {c_code}
+		 WHERE c_code = #{c_code}
 		   AND s_stat = 'W' 
 	</select>
 	
 	<delete id="delete">
 		DELETE FROM schedule
-		 WHERE s_code = # {s_code} 
+		 WHERE s_code = #{s_code} 
 	</delete>
 	
 	<!-- <update id="updateStatToP">
@@ -181,13 +181,13 @@
 	<select id="selectMultiByCcodeStatIsD">
 		SELECT *
 		  FROM schedule
-		 WHERE c_code = # {c_code}
+		 WHERE c_code = #{c_code}
 		   AND s_stat = 'D' 
 	</select>
 	
 	<!-- <delete id="delete">
 		DELETE FROM schedule
-		 WHERE s_code = # {s_code} 
+		 WHERE s_code = #{s_code} 
 	</delete> -->
 	
 	<!-- <update id="updateStatToP">
@@ -200,7 +200,7 @@
 	
 	<delete id="deleteBySrcodeStart">
 		DELETE FROM schedule
-		 WHERE sr_code = # {sr_code}
+		 WHERE sr_code = #{sr_code}
 		   AND s_start > sysdate 
 	</delete>
 	

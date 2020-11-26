@@ -26,8 +26,10 @@ public interface ScheduleRepeatMapper {
 
 //	관리자 - 반복근무 신청
 
-	public List<ScheduleRepeatVO> selectMultiByCcodeStatIsW(long c_code); // c_code와 stat이 'W'인 schedule_repeat 목록 가져오기
-																			// - 반복근무 신청 목록
+	public List<ScheduleRepeatVO> selectMultiByCcode(ScheduleRepeatVO scheduleRepeat); // c_code와 stat이 'W'인
+																						// schedule_repeat 목록
+																						// 가져오기
+	// - 반복근무 신청 목록
 
 	public int delete(int sr_code); // 해당 sr_code 삭제 - 반복근무 신청 거절
 

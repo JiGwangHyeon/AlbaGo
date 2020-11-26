@@ -182,6 +182,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
+	public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) { // 목록 조회
+
+		log.info("getListAppliedRepeatSchedule");
+		log.info("scheduleRepeat: " + scheduleRepeat.toString());
+
+		return scheduleRepeatMapper.selectMultiByCcode(scheduleRepeat);
+	}
+
+	@Override
 	public ScheduleRepeatVO lookUpAppliedRepeatedSchedule(ScheduleRepeatVO scheduleRepeat) {
 
 		log.info("lookUpAppliedRepeatedSchedule" + ForLog.dot);
@@ -412,14 +421,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// ***********************/관리자/반복근무 일정 신청 조회/승인/거절**************************//
 
-	@Override
-	public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(long c_code) { // 목록 조회
-
-		log.info("getListAppliedRepeatSchedule");
-		log.info("c_code: " + c_code);
-
-		return scheduleRepeatMapper.selectMultiByCcodeStatIsW(c_code);
-	}
+	/*
+	 * @Override public List<ScheduleRepeatVO> getListAppliedRepeatedSchedule(long
+	 * c_code) { // 목록 조회
+	 * 
+	 * log.info("getListAppliedRepeatSchedule"); log.info("c_code: " + c_code);
+	 * 
+	 * return scheduleRepeatMapper.selectMultiByCcodeStatIsW(c_code); }
+	 */
 
 	@Override
 	public int rejectAppliedRepeatedSchedule(int sr_code) {
@@ -524,14 +533,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// ***********************/관리자/반복근무 취소 신청 조회/승인/거절**************************//
 
-	@Override
-	public List<ScheduleRepeatVO> getListAppliedToCancelRepeatedSchedule(long c_code) {
-
-		log.info("getListAppliedToCancelRepeatedSchedule");
-		log.info("c_code: " + c_code);
-
-		return scheduleRepeatMapper.selectMultiByCcodeStatIsW(c_code); // select stat is D
-	}
+	/*
+	 * @Override public List<ScheduleRepeatVO>
+	 * getListAppliedToCancelRepeatedSchedule(long c_code) {
+	 * 
+	 * log.info("getListAppliedToCancelRepeatedSchedule"); log.info("c_code: " +
+	 * c_code);
+	 * 
+	 * return scheduleRepeatMapper.selectMultiByCcodeStatIsW(c_code); // select stat
+	 * is D }
+	 */
 
 	@Override
 	public int permitAppliedToCancelRepeatedSchedule(int sr_code) {
