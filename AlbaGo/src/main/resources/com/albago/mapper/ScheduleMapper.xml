@@ -25,6 +25,7 @@
 		   SET s_arrive = sysdate
 		 WHERE s_code = #{s_code}
 		   AND s_arrive IS NULL 
+		   AND c_code = #{c_code}
 	</update>
 	
 	<update id="updateLeave">
@@ -32,6 +33,7 @@
 		   SET s_leave = sysdate
 		 WHERE s_code = #{s_code}
 		   AND s_leave IS NULL 
+		   AND c_code = #{c_code}
 	</update>
 	
 	<select id="selectMultiByCcodeIdWeek" resultType="com.albago.domain.ScheduleVO">

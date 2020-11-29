@@ -7,13 +7,14 @@ import java.util.List;
 public class DummyGenerator {
 
 	public static void main(String args[]) {
-//		String[] s = new String[40];
-		for (int i = 0; i < 40; i++) {
+		String[] s = new String[1000];
+		for (int i = 0; i < 1000; i++) {
 //			s[i] = IdNew.nId() + IdNew.nNo2();
 //			System.out.println(s[i]);
-//			System.out.println(IdNew.nName());
+			System.out.println(IdNew.nName());
 //			System.out.println(IdNew.nNick());
-			System.out.println(IdNew.nNo() + IdNew.nNo() + IdNew.nNo2());
+//			System.out.println("010" + IdNew.nNo() + IdNew.nNo());
+//			System.out.println(IdNew.nBirDate());
 		}
 //		for (String i : s) {
 //			System.out.println(i + "@naver.com");
@@ -99,7 +100,7 @@ class IdNew {
 			Collections.shuffle(도);
 			text += 도.get(0);
 		}
-		return text + "/" + 월.get(0) + "/" + 일.get(0);
+		return text + "-" + 월.get(0) + "-" + 일.get(0);
 
 	}
 

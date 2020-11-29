@@ -99,4 +99,28 @@
 			WHERE  u_id = #{u_id} 
        			AND u_pw = <include refid="pw_encrypt"></include>
 	</select>
+	
+	<insert id="insertDummy">
+		INSERT INTO userinfo
+		            (u_id
+		             , u_pw
+		             , u_name
+		             , u_email
+		             , u_birth
+		             , u_gender
+		             , u_addr
+		             , u_phone
+		             , u_position
+		             , u_rdate)
+		     VALUES ( #{u_id}
+		     		  , <include refid="pw_encrypt"></include>
+		              , GET_KORNM('1' , '3')
+		              , #{u_email}
+		              , #{u_birth}
+		              , #{u_gender}
+		              , #{u_addr}
+		              , #{u_phone}
+		              , #{u_position}
+		              , #{u_qdate}) 
+	</insert>
 </mapper>

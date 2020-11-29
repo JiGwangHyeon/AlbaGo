@@ -29,7 +29,6 @@
 			                                                                u_id
 			                                                FROM   history
 			                                                WHERE  h_qdate IS NULL
-			                                                       AND h_position != 'A'
 	                                                       ) )
 			                         AND s_start >= ( Trunc(SYSDATE) - ( interval '8' day ) )
 			                         AND s_start < ( Trunc(SYSDATE) - ( interval '1' day ) )			                         

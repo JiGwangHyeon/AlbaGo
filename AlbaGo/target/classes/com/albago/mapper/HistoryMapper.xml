@@ -24,6 +24,7 @@
 		select h_perhour from history
 		 WHERE c_code = #{c_code}
 		   AND u_id = #{u_id} 
+		   AND h_qdate is null
 	</select>
 	
 </mapper>
