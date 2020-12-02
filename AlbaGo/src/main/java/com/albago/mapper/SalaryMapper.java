@@ -8,7 +8,7 @@ public interface SalaryMapper {
 
 	public int insertSalary(SalaryVO salary);
 
-	public List<SalaryVO> getWeeklySumOfBase();
+	public List<SalaryVO> getWeeklySumOfBase(String date);
 
 	public int setWeeklyExtra(SalaryVO salary);
 }

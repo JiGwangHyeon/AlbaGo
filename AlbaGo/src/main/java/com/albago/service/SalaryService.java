@@ -9,4 +9,6 @@ public interface SalaryService {
 	public int insertSalary(SalaryVO salary);
 
 	public WageVO getExpectedWage(ScheduleVO Schedule);
+
+	public void convertScheduleToSalaryForDummy();
 }

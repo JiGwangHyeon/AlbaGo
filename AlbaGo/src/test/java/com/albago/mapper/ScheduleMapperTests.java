@@ -33,7 +33,7 @@ public class ScheduleMapperTests {
 		log.info("ScheduleVO: " + mapper.getTodaysScheduleForE(schedule));
 	}
 
-	@Test
+//	@Test
 	public void testGetSchedule() {
 		log.info("testGetSchedule.................");
 
@@ -166,5 +166,10 @@ public class ScheduleMapperTests {
 		schedule.setSr_code(4);
 
 		mapper.checkDuplicateForRepeat(schedule);
+	}
+
+	@Test
+	public void testdummy() {
+		log.info(mapper.selectDummy());
 	}
 }

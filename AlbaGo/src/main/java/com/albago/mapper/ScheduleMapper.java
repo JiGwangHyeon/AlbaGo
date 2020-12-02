@@ -6,6 +6,8 @@ import com.albago.domain.ScheduleVO;
 
 public interface ScheduleMapper {
 
+	public List<ScheduleVO> selectDummy();
+
 //	직원 - 기본 기능
 
 	public ScheduleVO selectSingleByCcodeIdToday(ScheduleVO schedule); // 오늘에 해당하는 건 조회

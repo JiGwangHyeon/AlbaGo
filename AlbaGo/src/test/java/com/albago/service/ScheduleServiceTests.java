@@ -165,10 +165,24 @@ public class ScheduleServiceTests {
 		}
 	}
 
-	@Test
+//	@Test
 	public void test() {
 		int sr_code = 282;
 
 		service.permitAppliedRepeatedSchedule(sr_code);
+	}
+
+	@Test
+	public void dummy() {
+
+		ScheduleRepeatVO scheduleRepeat = new ScheduleRepeatVO();
+
+		scheduleRepeat.setC_code(1324132413);
+		scheduleRepeat.setU_id("fGTIBn52");
+		scheduleRepeat.setSr_start("09:00");
+		scheduleRepeat.setSr_end("17:00");
+		scheduleRepeat.setSr_repeat("23456");
+
+		service.insertDummy(scheduleRepeat);
 	}
 }

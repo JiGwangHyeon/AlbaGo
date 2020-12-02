@@ -125,9 +125,9 @@ public class CalcDate {
 
 	public static double getWeeklyExtra(double sumOfBase, int count) {
 		if (sumOfBase > 40) {
-			return 8 / count;
+			return Math.round(8 / count * 100) / 100.0;
 		} else if (sumOfBase >= 15) {
-			return sumOfBase / 5 / count;
+			return Math.round(sumOfBase / 5 / count * 100) / 100.0;
 		} else {
 			return 0;
 		}

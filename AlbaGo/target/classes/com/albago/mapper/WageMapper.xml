@@ -57,4 +57,82 @@
 		 WHERE c_code = #{c_code}
 		   AND u_id = #{u_id} 
 	</select>
+	
+	<insert id="insertDummy">
+	<![CDATA[
+	INSERT INTO wage
+	            (w_code
+	             , c_code
+	             , u_id
+	             , w_base
+	             , w_wextra
+	             , w_nextra
+	             , w_oextra
+	             , w_hextra
+	             , w_month)
+	SELECT seq_w_code.NEXTVAL
+	       , c_code
+	       , u_id
+	       , w_base
+	       , w_wextra
+	       , w_nextra
+	       , w_oextra
+	       , w_hextra
+	       ,to_char(add_months(to_date(#{w_month},'yyyymmdd'),1),'yyyymm')
+	  FROM ((SELECT c_code
+	                , u_id
+	                , SUM(sa_base)   w_base
+	                , SUM(sa_wextra) w_wextra
+	                , SUM(sa_nextra) w_nextra
+	                , SUM(sa_oextra) w_oextra
+	                , SUM(sa_hextra) w_hextra
+	           FROM salary
+	          WHERE s_code IN (SELECT s_code
+	                                         FROM schedule
+	                                        WHERE ( s_start < Trunc(to_date(#{w_month}, 'yyyymmdd')))
+	                                          AND ( s_start >= add_months(to_date(#{w_month}, 'yyyymmdd'), -1))
+	                                          AND ( c_code =1324132413  ))
+	          GROUP BY c_code
+	                   , u_id))
+		]]>      
+	</insert> 
+	
+	<insert id="insertDummyThisMonth">
+	<![CDATA[
+	INSERT INTO wage
+	            (w_code
+	             , c_code
+	             , u_id
+	             , w_base
+	             , w_wextra
+	             , w_nextra
+	             , w_oextra
+	             , w_hextra
+	             , w_month)
+	SELECT seq_w_code.NEXTVAL
+	       , c_code
+	       , u_id
+	       , w_base
+	       , w_wextra
+	       , w_nextra
+	       , w_oextra
+	       , w_hextra
+	       ,to_char(to_date(#{w_month}, 'yyyymmdd'),'yyyymm')
+	  FROM ((SELECT c_code
+	                , u_id
+	                , SUM(sa_base)   w_base
+	                , SUM(sa_wextra) w_wextra
+	                , SUM(sa_nextra) w_nextra
+	                , SUM(sa_oextra) w_oextra
+	                , SUM(sa_hextra) w_hextra
+	           FROM salary
+	          WHERE s_code IN (SELECT s_code
+	                                         FROM schedule
+	                                        WHERE ( s_start < Trunc(sysdate))
+	                                          AND ( s_start >= add_months(to_date(#{w_month}, 'yyyymmdd'), -1))
+	                                          AND ( c_code =1324132413  ))
+	          GROUP BY c_code
+	                   , u_id))
+		]]>      
+	</insert> 
 </mapper>

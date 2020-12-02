@@ -30,8 +30,8 @@
 			                                                FROM   history
 			                                                WHERE  h_qdate IS NULL
 	                                                       ) )
-			                         AND s_start >= ( Trunc(SYSDATE) - ( interval '8' day ) )
-			                         AND s_start < ( Trunc(SYSDATE) - ( interval '1' day ) )			                         
+			                         AND s_start >=to_date(#{date}, 'yyyymmdd')
+			                         AND s_start <to_date(#{date}, 'yyyymmdd') + (interval '7' day)                
 			                 )
 			GROUP  BY c_code,
 			          u_id
@@ -48,8 +48,8 @@
 			              FROM   schedule
 			              WHERE  c_code = #{c_code}
 					             AND    u_id = #{u_id}
-					             AND    s_start>= (trunc(SYSDATE) - (interval '8' day))
-					             AND    s_start < (trunc(SYSDATE) - (interval '1' day))
+					             AND    s_start>= to_date(#{date}, 'yyyymmdd')
+					             AND    s_start < to_date(#{date}, 'yyyymmdd') + (interval '7' day)
 	               )
         ]]>
 	</update>

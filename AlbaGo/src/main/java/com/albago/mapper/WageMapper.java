@@ -12,4 +12,8 @@ public interface WageMapper {
 	public int getPay(WageVO wage);
 
 	public int selectSingle(WageVO wage);
+
+	public int insertDummy(WageVO wage);
+
+	public int insertDummyThisMonth(WageVO wage);
 }

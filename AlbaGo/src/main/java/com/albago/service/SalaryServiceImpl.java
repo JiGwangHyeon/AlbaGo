@@ -53,12 +53,13 @@ public class SalaryServiceImpl implements SalaryService {
 		}
 	}
 
-	@Scheduled(cron = "0 0 0 ? * 3")
-	public void setWeeklyExtra() {
-		List<SalaryVO> list = salaryMapper.getWeeklySumOfBase();
+//	@Scheduled(cron = "0 0 0 ? * 3")
+	public void setWeeklyExtra(String date) {
+		List<SalaryVO> list = salaryMapper.getWeeklySumOfBase(date);
 
 		for (SalaryVO sa : list) {
 			double we = CalcDate.getWeeklyExtra(sa.getSa_base(), sa.getS_code());
+			sa.setDate(date);
 			sa.setSa_wextra(we);
 			salaryMapper.setWeeklyExtra(sa);
 		}
@@ -125,6 +126,22 @@ public class SalaryServiceImpl implements SalaryService {
 		wage.setW_month(Integer.toString(eCal.get(Calendar.YEAR)) + Integer.toString(eCal.get(Calendar.MONTH) + 1));
 
 		return wage;
+	}
+
+	public void convertScheduleToSalaryForDummy() {
+		List<ScheduleVO> schedule = scheduleMapper.selectDummy();
+
+		for (ScheduleVO sc : schedule) {
+			if (sc.getS_arrive().trim().isEmpty() || sc.getS_leave().trim().isEmpty()) {
+				continue;
+			}
+			SalaryVO salary = new SalaryVO();
+			salary.setC_code(sc.getC_code());
+			salary.setU_id(sc.getU_id());
+			salary.setS_code(sc.getS_code());
+			CalcDate.setSalaryVO(salary, sc);
+			salaryMapper.insertSalary(salary);
+		}
 	}
 
 }

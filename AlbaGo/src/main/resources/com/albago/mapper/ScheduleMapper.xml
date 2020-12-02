@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.albago.mapper.ScheduleMapper">
+
+	<select id="selectDummy" resultType="com.albago.domain.ScheduleVO">
+		select * from schedule where c_code = 1324132413 and s_arrive is not null and s_leave is not null
+	</select>
 	
 	<!-- 직원 - 기본 기능 -->
 	

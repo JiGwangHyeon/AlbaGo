@@ -1,5 +1,6 @@
 package com.albago.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.junit.Test;
@@ -78,8 +79,26 @@ public class SalaryServiceTests {
 
 	}
 
-	@Test
+//	@Test
 	public void testconvert() {
-		salaryServiceImpl.convertScheduleToSalary();
+		salaryServiceImpl.convertScheduleToSalaryForDummy();
+	}
+
+	@Test
+	public void dummy() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(2019, 11, 30);
+
+		Calendar cal2 = (Calendar) cal.clone();
+		cal2.set(2020, 10, 30);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		while (cal2.after(cal)) {
+			salaryServiceImpl.setWeeklyExtra(sdf.format(cal.getTime()));
+
+			cal.add(Calendar.DATE, 7);
+		}
 	}
 }

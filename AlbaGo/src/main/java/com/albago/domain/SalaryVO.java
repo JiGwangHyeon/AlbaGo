@@ -14,4 +14,5 @@ public class SalaryVO {
 	private double sa_nextra;
 	private double sa_oextra;
 	private double sa_hextra;
+	private String date;
 }

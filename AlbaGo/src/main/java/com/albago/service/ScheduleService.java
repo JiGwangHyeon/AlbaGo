@@ -9,6 +9,7 @@ import com.albago.domain.ScheduleVO;
 
 public interface ScheduleService {
 
+	public int insertDummy(ScheduleRepeatVO scheduleRepeat);
 	// ***********************Schedule 기본 기능**************************//
 
 	public ScheduleVO getTodaysSchedule(ScheduleVO schedule);
